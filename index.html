@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>TARS Command Center</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#00e676">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TARS">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<style>
+:root {
+  --bg:#0d0d0d; --surface:#161616; --surface2:#1f1f1f; --surface3:#252525;
+  --border:#2a2a2a; --border2:#333;
+  --green:#00e676; --green-dim:#1a3d2b; --green-text:#00c853;
+  --red:#ff1744; --red-dim:#3d1a1a; --red-text:#ff5252;
+  --yellow:#ffc400; --yellow-dim:#3d3000; --yellow-text:#ffca28;
+  --blue:#2979ff; --blue-dim:#1a2440; --blue-text:#82b1ff;
+  --purple:#d500f9; --purple-dim:#2a1040;
+  --text:#e0e0e0; --text-dim:#888;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bot: env(safe-area-inset-bottom, 0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;background:var(--bg);}
+body{color:var(--text);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;font-size:13px;-webkit-text-size-adjust:100%;}
+
+/* ── HEADER ── */
+.header{
+  background:var(--surface);
+  border-bottom:2px solid var(--border);
+  padding:calc(12px + var(--safe-top)) 20px 0;
+  position:sticky;top:0;z-index:200;
+}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:10px;}
+.header-left{display:flex;align-items:center;gap:10px;min-width:0;}
+.title{font-size:16px;font-weight:900;letter-spacing:2.5px;color:#fff;text-transform:uppercase;white-space:nowrap;}
+.tars-badge{background:var(--green);color:#000;font-size:8px;font-weight:900;letter-spacing:1.5px;padding:2px 8px;border-radius:2px;white-space:nowrap;flex-shrink:0;}
+.persona-chip{display:flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border2);border-radius:20px;padding:4px 10px;cursor:pointer;transition:all .15s;flex-shrink:0;}
+.persona-chip:hover{border-color:var(--green);}
+.persona-avatar{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;}
+.persona-chip-name{font-size:10px;font-weight:700;letter-spacing:.5px;}
+.persona-chip-icon{font-size:9px;color:var(--text-dim);}
+
+.doctrine-bar{font-size:9px;color:var(--red-text);letter-spacing:1.5px;font-weight:700;margin-bottom:8px;text-transform:uppercase;}
+.global-progress{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.progress-label{font-size:10px;color:var(--text-dim);white-space:nowrap;min-width:90px;}
+.progress-track{flex:1;height:4px;background:var(--border);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--green),#00bfa5);border-radius:3px;transition:width .4s;}
+.progress-pct{font-size:10px;font-weight:700;color:var(--green);min-width:28px;text-align:right;}
+
+/* ── TAB NAV ── */
+.tab-nav{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;border-top:1px solid var(--border);margin:0 -20px;padding:0 20px;}
+.tab-nav::-webkit-scrollbar{display:none;}
+.tab-btn{background:none;border:none;color:var(--text-dim);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:9px 14px;cursor:pointer;border-bottom:3px solid transparent;transition:all .15s;position:relative;bottom:-2px;white-space:nowrap;flex-shrink:0;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active{color:var(--green);border-bottom-color:var(--green);}
+.tab-count{display:inline-block;background:var(--surface2);border:1px solid var(--border);border-radius:10px;font-size:8px;padding:0 4px;margin-left:4px;color:var(--text-dim);vertical-align:middle;}
+.tab-btn.active .tab-count{background:var(--green-dim);border-color:var(--green);color:var(--green);}
+
+/* ── PANELS ── */
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+/* ── PERSONA MODAL ── */
+.persona-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;}
+.persona-modal{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:32px 24px;max-width:340px;width:100%;text-align:center;}
+.persona-modal-title{font-size:11px;font-weight:800;letter-spacing:3px;color:var(--text-dim);text-transform:uppercase;margin-bottom:6px;}
+.persona-modal-sub{font-size:13px;color:var(--text-dim);margin-bottom:28px;line-height:1.5;}
+.persona-buttons{display:flex;gap:12px;}
+.persona-pick-btn{flex:1;padding:18px 12px;border-radius:8px;border:2px solid var(--border);background:var(--surface2);cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:8px;}
+.persona-pick-btn:hover{transform:translateY(-2px);}
+.persona-pick-btn.jerry:hover{border-color:var(--green);background:var(--green-dim);}
+.persona-pick-btn.ashley:hover{border-color:#7c6af7;background:#1a1a40;}
+.persona-pick-btn .pick-av{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;}
+.persona-pick-btn .pick-name{font-size:13px;font-weight:800;letter-spacing:1px;}
+.persona-pick-btn .pick-role{font-size:10px;color:var(--text-dim);}
+.hidden{display:none!important;}
+
+/* ── SIGN OFF BUTTON ── */
+.signoff-btn{background:var(--red-dim);color:var(--red-text);border:1px solid var(--red);padding:5px 10px;border-radius:6px;font-size:9px;font-weight:900;letter-spacing:1px;cursor:pointer;text-transform:uppercase;transition:all .15s;white-space:nowrap;}
+.signoff-btn:hover{background:var(--red);color:#fff;}
+
+/* ── SIGNOFF MODAL ── */
+.signoff-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:600;display:flex;align-items:center;justify-content:center;padding:20px;}
+.signoff-modal{background:var(--surface);border:1px solid var(--red);border-radius:12px;padding:28px 24px;max-width:360px;width:100%;}
+.signoff-modal-title{font-size:12px;font-weight:900;letter-spacing:3px;color:var(--red-text);text-transform:uppercase;margin-bottom:4px;}
+.signoff-modal-sub{font-size:11px;color:var(--text-dim);margin-bottom:20px;line-height:1.5;}
+.signoff-command{background:#0a0a0a;border:1px solid var(--border);border-radius:6px;padding:12px;font-size:10px;color:var(--green);font-family:'Courier New',monospace;line-height:1.6;margin-bottom:16px;white-space:pre-wrap;}
+.signoff-steps{margin-bottom:20px;}
+.signoff-step{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;font-size:11px;color:var(--text-dim);line-height:1.4;}
+.signoff-step-num{background:var(--red-dim);color:var(--red-text);border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;flex-shrink:0;margin-top:1px;}
+.signoff-btns{display:flex;gap:10px;}
+.signoff-copy-btn{flex:1;padding:12px;background:var(--green-dim);border:1px solid var(--green);color:var(--green);border-radius:6px;font-size:10px;font-weight:900;letter-spacing:1px;cursor:pointer;text-transform:uppercase;transition:all .15s;}
+.signoff-copy-btn:hover{background:var(--green);color:#000;}
+.signoff-copy-btn.copied{background:var(--green);color:#000;}
+.signoff-cancel-btn{padding:12px 16px;background:var(--surface2);border:1px solid var(--border);color:var(--text-dim);border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;transition:all .15s;}
+.signoff-cancel-btn:hover{border-color:var(--text-dim);color:var(--text);}
+
+/* ── FILTERS ── */
+.filters{display:flex;gap:6px;padding:10px 20px;background:var(--bg);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.filters::-webkit-scrollbar{display:none;}
+.filter-btn{background:var(--surface2);color:var(--text-dim);border:1px solid var(--border);padding:4px 10px;border-radius:12px;font-size:10px;cursor:pointer;font-weight:600;letter-spacing:.5px;transition:all .15s;white-space:nowrap;flex-shrink:0;}
+.filter-btn:hover{border-color:var(--green);color:var(--green);}
+.filter-btn.active{background:var(--green-dim);border-color:var(--green);color:var(--green);}
+
+/* ── LEGEND ── */
+.legend{display:flex;gap:12px;padding:8px 20px;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;flex-wrap:nowrap;}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:9px;color:var(--text-dim);font-weight:600;white-space:nowrap;}
+.legend-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+
+/* ── MAIN CONTENT ── */
+.main{padding:14px 20px calc(60px + var(--safe-bot));max-width:900px;margin:0 auto;}
+
+/* ── SUMMARY CARDS ── */
+.summary-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px;}
+.summary-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:10px 8px;text-align:center;}
+.card-number{font-size:20px;font-weight:900;line-height:1;}
+.card-label{font-size:8px;color:var(--text-dim);letter-spacing:.8px;text-transform:uppercase;margin-top:3px;}
+.card-green .card-number{color:var(--green);}
+.card-red .card-number{color:var(--red-text);}
+
+/* ── SECTIONS ── */
+.section{margin-bottom:10px;border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.section-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface2);cursor:pointer;user-select:none;transition:background .15s;}
+.section-header:hover{background:#252525;}
+.section-title{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#ccc;}
+.section-meta{display:flex;align-items:center;gap:6px;}
+.section-tag{font-size:8px;font-weight:700;letter-spacing:.8px;padding:2px 7px;border-radius:2px;text-transform:uppercase;}
+.tag-prereq{background:#5c3317;color:#ff9800;} .tag-day1{background:#1a2f1a;color:#69f0ae;}
+.tag-rebuild{background:#1a1a3a;color:#82b1ff;} .tag-connect{background:#2a1a40;color:#ce93d8;}
+.tag-build{background:#3d2800;color:#ffd54f;} .tag-ops{background:#0d2a2a;color:#4dd0e1;}
+.tag-active{background:#1a3d1a;color:#00e676;} .tag-pipeline{background:#3d1a2a;color:#f48fb1;}
+.section-count{font-size:9px;color:var(--text-dim);}
+.chevron{font-size:9px;color:var(--text-dim);transition:transform .2s;}
+.section.collapsed .chevron{transform:rotate(-90deg);}
+.section-progress-bar{height:2px;background:var(--border);}
+.section-progress-fill{height:100%;background:linear-gradient(90deg,var(--green),#00bfa5);transition:width .4s;}
+.section-body{background:var(--surface);}
+.section.collapsed .section-body,.section.collapsed .section-progress-bar{display:none;}
+
+/* ── ITEMS ── */
+.item{display:flex;align-items:flex-start;gap:10px;padding:9px 14px 9px 12px;border-bottom:1px solid #1a1a1a;cursor:pointer;transition:background .1s;position:relative;}
+.item:last-child{border-bottom:none;}
+.item:hover{background:#1c1c1c;}
+.item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;}
+.item.done::before{background:var(--green);} .item.needed::before{background:var(--red);}
+.item.inprog::before{background:var(--yellow);} .item.upcoming::before{background:var(--blue);}
+.checkbox{width:16px;height:16px;border-radius:3px;border:2px solid var(--border);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:10px;transition:all .15s;}
+.item.done .checkbox{background:var(--green);border-color:var(--green);color:#000;font-weight:900;}
+.item.needed .checkbox{border-color:var(--red-text);}
+.item.inprog .checkbox{border-color:var(--yellow);background:var(--yellow-dim);}
+.item.upcoming .checkbox{border-color:var(--blue);background:var(--blue-dim);}
+.item-content{flex:1;min-width:0;}
+.item-text{line-height:1.45;font-size:12px;}
+.item.done .item-text{color:var(--text-dim);text-decoration:line-through;text-decoration-color:#444;}
+.item.needed .item-text{color:#eee;} .item.inprog .item-text{color:#fff;}
+.item-tags{display:flex;gap:3px;margin-top:4px;flex-wrap:wrap;}
+.item-tag{font-size:8px;font-weight:700;padding:1px 5px;border-radius:2px;letter-spacing:.5px;text-transform:uppercase;}
+.p1{background:#3d0a0a;color:var(--red-text);} .p2{background:#3d2800;color:var(--yellow-text);}
+.p3{background:#0d1f3d;color:var(--blue-text);}
+.ashley-tag{background:#1a1a40;color:#9fa8da;} .manual-tag{background:#1a3d1a;color:#a5d6a7;}
+.auto-tag{background:#1a2a3d;color:#80cbc4;} .blocked-tag{background:#2a1a00;color:#ffcc02;}
+.done-tag{background:#1a3d1a;color:var(--green);}
+
+/* ── MY TASKS ── */
+.mytasks-header{padding:20px 20px 0;max-width:900px;margin:0 auto;}
+.mytasks-greeting{font-size:18px;font-weight:900;color:#fff;margin-bottom:4px;}
+.mytasks-sub{font-size:12px;color:var(--text-dim);}
+.mytasks-progress-block{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;margin-top:14px;}
+.mtp-label{font-size:9px;font-weight:800;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;margin-bottom:10px;}
+.mtp-stats{display:flex;gap:8px;margin-bottom:10px;}
+.mtp-stat{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:10px;text-align:center;}
+.mtp-stat-n{font-size:18px;font-weight:900;}
+.mtp-stat-l{font-size:8px;color:var(--text-dim);letter-spacing:.8px;text-transform:uppercase;margin-top:2px;}
+.mtp-bar-label{font-size:9px;color:var(--text-dim);margin-bottom:4px;}
+.mtp-track{height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
+.mtp-fill{height:100%;background:linear-gradient(90deg,var(--green),#00bfa5);border-radius:3px;transition:width .4s;}
+.mytasks-list{padding:14px 20px calc(60px + var(--safe-bot));max-width:900px;margin:0 auto;}
+.mytasks-section-label{font-size:9px;font-weight:800;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;margin:16px 0 6px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.mytask-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px 10px 12px;background:var(--surface);border:1px solid var(--border);border-radius:6px;margin-bottom:6px;position:relative;cursor:pointer;transition:background .1s;}
+.mytask-item:hover{background:var(--surface2);}
+.mytask-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px;}
+.mytask-item.done::before{background:var(--green);} .mytask-item.needed::before{background:var(--red);}
+.mytask-item.inprog::before{background:var(--yellow);} .mytask-item.upcoming::before{background:var(--blue);}
+.mytask-item.done .item-text{color:var(--text-dim);text-decoration:line-through;text-decoration-color:#444;}
+.mytask-item .checkbox{width:16px;height:16px;border-radius:3px;border:2px solid var(--border);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:10px;}
+.mytask-item.done .checkbox{background:var(--green);border-color:var(--green);color:#000;font-weight:900;}
+.mytask-item.needed .checkbox{border-color:var(--red-text);}
+.mytask-item.inprog .checkbox{border-color:var(--yellow);background:var(--yellow-dim);}
+.no-persona-screen{display:flex;align-items:center;justify-content:center;min-height:60vh;padding:20px;}
+
+/* ── TEAM TAB ── */
+.team-main{padding:16px 20px calc(60px + var(--safe-bot));max-width:900px;margin:0 auto;}
+.team-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:500px){.team-cols{grid-template-columns:1fr;}}
+.team-col{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.team-col-header{padding:14px 16px 10px;border-bottom:1px solid var(--border);}
+.team-col-title{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.team-col-progress-track{height:4px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:8px;}
+.team-col-progress-fill{height:100%;border-radius:3px;transition:width .4s;}
+.team-col-stats{display:flex;gap:8px;}
+.team-col-stat{font-size:10px;color:var(--text-dim);}
+.team-col-stat span{font-weight:700;color:var(--text);}
+.team-item-row{display:flex;align-items:flex-start;gap:8px;padding:8px 16px;border-bottom:1px solid #1a1a1a;position:relative;}
+.team-item-row:last-child{border-bottom:none;}
+.team-item-row::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;}
+.team-item-row.done::before{background:var(--green);}
+.team-item-row.needed::before{background:var(--red);}
+.team-item-row.inprog::before{background:var(--yellow);}
+.team-item-row.upcoming::before{background:var(--blue);}
+.team-item-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.team-item-dot.done{background:var(--green);} .team-item-dot.needed{background:var(--red);}
+.team-item-dot.inprog{background:var(--yellow);} .team-item-dot.upcoming{background:var(--blue);}
+.team-item-text{font-size:11px;line-height:1.4;color:var(--text);}
+.team-item-row.done .team-item-text{color:var(--text-dim);text-decoration:line-through;text-decoration-color:#444;}
+.team-badge{font-size:8px;font-weight:700;letter-spacing:.5px;padding:1px 5px;border-radius:2px;text-transform:uppercase;flex-shrink:0;margin-top:2px;}
+.team-section-divider{padding:6px 16px 4px;background:var(--surface2);border-bottom:1px solid var(--border);font-size:8px;font-weight:800;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;}
+
+/* ── RESOURCES ── */
+.resources-main{padding:16px 20px calc(60px + var(--safe-bot));max-width:900px;margin:0 auto;}
+.res-section-title{font-size:9px;font-weight:800;letter-spacing:2.5px;color:var(--text-dim);text-transform:uppercase;margin:0 0 10px;padding-bottom:7px;border-bottom:1px solid var(--border);}
+.res-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-bottom:28px;}
+.res-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:8px;transition:border-color .15s,background .15s;}
+.res-card:hover{border-color:#444;background:var(--surface2);}
+.res-card.featured{border-color:var(--green);background:linear-gradient(135deg,#0d1a0d,#161616);}
+.res-card.featured:hover{border-color:#00ff88;background:linear-gradient(135deg,#0f200f,#1a1a1a);}
+.res-card-icon{font-size:20px;line-height:1;}
+.res-card-title{font-size:10px;font-weight:800;letter-spacing:1.5px;color:#fff;text-transform:uppercase;line-height:1.3;}
+.res-card.featured .res-card-title{color:var(--green);}
+.res-card-desc{font-size:10px;color:var(--text-dim);line-height:1.5;flex:1;}
+.res-card-status{font-size:8px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:2px 7px;border-radius:2px;display:inline-block;width:fit-content;}
+.status-live{background:var(--green-dim);color:var(--green);} .status-pending{background:var(--yellow-dim);color:var(--yellow-text);}
+.status-build{background:var(--blue-dim);color:var(--blue-text);} .status-missing{background:var(--red-dim);color:var(--red-text);}
+.res-btn{display:flex;align-items:center;justify-content:center;gap:5px;background:var(--surface2);border:1px solid var(--border);color:var(--text-dim);font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:7px 12px;border-radius:4px;cursor:pointer;text-decoration:none;transition:all .15s;width:100%;text-align:center;}
+.res-btn:hover{border-color:var(--text-dim);color:var(--text);}
+.res-btn.btn-green{background:var(--green-dim);border-color:var(--green);color:var(--green);}
+.res-btn.btn-green:hover{background:#1f4d32;color:#fff;}
+.res-btn.btn-disabled{opacity:.4;cursor:not-allowed;pointer-events:none;}
+
+/* ── STATUS TAB ── */
+.status-main{padding:16px 20px calc(60px + var(--safe-bot));max-width:900px;margin:0 auto;}
+.status-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+@media(max-width:540px){.status-grid-2{grid-template-columns:1fr;}}
+.status-panel{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.status-panel-header{background:var(--surface2);padding:10px 14px;font-size:9px;font-weight:800;letter-spacing:1.5px;color:var(--text-dim);text-transform:uppercase;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.connector-row{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:1px solid #1a1a1a;gap:8px;}
+.connector-row:last-child{border-bottom:none;}
+.connector-name{font-size:11px;font-weight:600;color:var(--text);flex:1;}
+.connector-detail{font-size:9px;color:var(--text-dim);flex:1;}
+.conn-badge{font-size:8px;font-weight:700;letter-spacing:.8px;padding:2px 7px;border-radius:2px;text-transform:uppercase;white-space:nowrap;}
+.conn-active{background:var(--green-dim);color:var(--green);} .conn-pending{background:var(--yellow-dim);color:var(--yellow-text);}
+.conn-missing{background:var(--red-dim);color:var(--red-text);} .conn-fallback{background:#1a1a3a;color:var(--blue-text);}
+.task-row{display:flex;align-items:flex-start;padding:9px 14px;border-bottom:1px solid #1a1a1a;gap:10px;}
+.task-row:last-child{border-bottom:none;}
+.task-info{flex:1;}
+.task-name{font-size:11px;font-weight:600;color:var(--text);}
+.task-schedule{font-size:9px;color:var(--text-dim);margin-top:2px;}
+.team-row{display:flex;align-items:center;padding:10px 14px;border-bottom:1px solid #1a1a1a;gap:10px;}
+.team-row:last-child{border-bottom:none;}
+.team-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;flex-shrink:0;}
+.avatar-jerry{background:#1a3d2b;color:var(--green);border:1px solid var(--green);}
+.avatar-ashley{background:#1a1a40;color:#9fa8da;border:1px solid #3d3d80;}
+.team-name{font-size:11px;font-weight:700;color:var(--text);}
+.team-role{font-size:9px;color:var(--text-dim);}
+.team-info{flex:1;}
+.cess-meter{padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:16px;}
+.cess-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:10px;}
+.cess-title{font-size:9px;font-weight:800;letter-spacing:1.5px;color:var(--text-dim);text-transform:uppercase;}
+.cess-score{font-size:24px;font-weight:900;color:var(--yellow);line-height:1;}
+.cess-score span{font-size:12px;color:var(--text-dim);}
+.cess-pillars{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.cess-pillar{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:7px 9px;}
+.cess-pillar-name{font-size:8px;color:var(--text-dim);letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px;}
+.cess-pillar-bar-track{height:3px;background:var(--border);border-radius:2px;overflow:hidden;}
+.cess-pillar-bar-fill{height:100%;border-radius:2px;}
+.cess-pillar-val{font-size:9px;font-weight:700;margin-top:3px;}
+
+/* ── FOOTER ── */
+.footer{text-align:center;padding:14px 20px;font-size:9px;color:#333;letter-spacing:1px;}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:#333;border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:#555;}
+</style>
+</head>
+<body>
+
+<!-- ══ SIGNOFF MODAL ══ -->
+<div class="signoff-overlay hidden" id="signoff-modal">
+  <div class="signoff-modal">
+    <div class="signoff-modal-title">⏻ UPDATE &amp; SIGN OFF</div>
+    <div class="signoff-modal-sub">Copy the command below and paste it into TARS in Cowork to run your end-of-day signoff.</div>
+    <div class="signoff-command" id="signoff-cmd">TARS, close out.
+Run the end-of-day signoff sequence.
+Update the punch list, memory, and Command Center.
+Deliver the end-of-day briefing.</div>
+    <div class="signoff-steps">
+      <div class="signoff-step"><div class="signoff-step-num">1</div><span>Tap COPY COMMAND below</span></div>
+      <div class="signoff-step"><div class="signoff-step-num">2</div><span>Open Cowork on Ashley's machine (or Remote Desktop)</span></div>
+      <div class="signoff-step"><div class="signoff-step-num">3</div><span>Paste into the TARS chat and hit send</span></div>
+      <div class="signoff-step"><div class="signoff-step-num">4</div><span>TARS runs the full signoff — punch list, memory, briefing</span></div>
+    </div>
+    <div class="signoff-btns">
+      <button class="signoff-copy-btn" id="signoff-copy-btn" onclick="copySignoffCommand()">📋 COPY COMMAND</button>
+      <button class="signoff-cancel-btn" onclick="hideSignoffModal()">CANCEL</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PERSONA MODAL ══ -->
+<div class="persona-modal-overlay hidden" id="persona-modal">
+  <div class="persona-modal">
+    <div class="persona-modal-title">TARS Command Center</div>
+    <div class="persona-modal-sub">Who's logging in? Your view will be customized to your tasks.</div>
+    <div class="persona-buttons">
+      <button class="persona-pick-btn jerry" onclick="setPersona('jerry')">
+        <div class="pick-av" style="background:#1a3d2b;color:var(--green);border:2px solid var(--green);">JE</div>
+        <div class="pick-name" style="color:var(--green);">JERRY</div>
+        <div class="pick-role">Owner / Principal</div>
+      </button>
+      <button class="persona-pick-btn ashley" onclick="setPersona('ashley')">
+        <div class="pick-av" style="background:#1a1a40;color:#9fa8da;border:2px solid #3d3d80;">A</div>
+        <div class="pick-name" style="color:#9fa8da;">ASHLEY</div>
+        <div class="pick-role">Operations</div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HEADER ══ -->
+<div class="header">
+  <div class="header-top">
+    <div class="header-left">
+      <span class="title">TARS</span>
+      <span class="tars-badge">COMMAND CENTER</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button class="signoff-btn" onclick="showSignoffModal()">⏻ UPDATE &amp; SIGN OFF</button>
+      <div class="persona-chip" onclick="showPersonaModal()">
+        <div class="persona-avatar" id="persona-avatar" style="background:#1a3d2b;color:var(--green);border:1px solid var(--green);">JE</div>
+        <span class="persona-chip-name" id="persona-name">JERRY</span>
+        <span class="persona-chip-icon">▾</span>
+      </div>
+    </div>
+  </div>
+  <div class="doctrine-bar">⚡ APATHY KILLS · BUILD WHAT YOU DREW · NO OPEN LOOPS</div>
+  <div class="global-progress">
+    <span class="progress-label" id="global-label">0 of 0 complete</span>
+    <div class="progress-track"><div class="progress-fill" id="global-bar" style="width:0%"></div></div>
+    <span class="progress-pct" id="global-pct">0%</span>
+  </div>
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('my-tasks')" id="tab-my-tasks">👤 MY TASKS</button>
+    <button class="tab-btn" onclick="switchTab('team')" id="tab-team">👥 TEAM <span class="tab-count" id="team-count">—</span></button>
+    <button class="tab-btn" onclick="switchTab('punch-list')" id="tab-punch-list">📋 PUNCH LIST <span class="tab-count" id="tab-punch-count">—</span></button>
+    <button class="tab-btn" onclick="switchTab('resources')" id="tab-resources">📁 RESOURCES</button>
+    <button class="tab-btn" onclick="switchTab('status')" id="tab-status">🔌 STATUS</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     TAB: MY TASKS
+══════════════════════════════════════ -->
+<div class="tab-panel active" id="panel-my-tasks">
+  <!-- Header stats block -->
+  <div class="mytasks-header">
+    <div class="mytasks-greeting" id="mt-greeting">Good morning, Jerry.</div>
+    <div class="mytasks-sub" id="mt-sub">Here's what's on your plate.</div>
+    <div class="mytasks-progress-block">
+      <div class="mtp-label">YOUR PROGRESS</div>
+      <div class="mtp-stats">
+        <div class="mtp-stat">
+          <div class="mtp-stat-n" id="mt-done" style="color:var(--green)">0</div>
+          <div class="mtp-stat-l">Done</div>
+        </div>
+        <div class="mtp-stat">
+          <div class="mtp-stat-n" id="mt-open" style="color:var(--red-text)">0</div>
+          <div class="mtp-stat-l">Open</div>
+        </div>
+        <div class="mtp-stat">
+          <div class="mtp-stat-n" id="mt-inprog" style="color:var(--yellow)">0</div>
+          <div class="mtp-stat-l">In Prog</div>
+        </div>
+        <div class="mtp-stat">
+          <div class="mtp-stat-n" id="mt-p1" style="color:var(--red-text)">0</div>
+          <div class="mtp-stat-l">P1 🔴</div>
+        </div>
+      </div>
+      <div class="mtp-bar-label" id="mt-bar-label">0 of 0 complete</div>
+      <div class="mtp-track"><div class="mtp-fill" id="mt-bar" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <!-- P1 CRITICAL -->
+  <div class="mytasks-list">
+    <div id="mt-p1-section">
+      <div class="mytasks-section-label" style="color:var(--red-text);">🔴 P1 CRITICAL — YOUR ITEMS</div>
+      <div id="mt-p1-list"></div>
+    </div>
+    <div id="mt-open-section">
+      <div class="mytasks-section-label">⛔ OPEN / NEEDED</div>
+      <div id="mt-open-list"></div>
+    </div>
+    <div id="mt-inprog-section">
+      <div class="mytasks-section-label" style="color:var(--yellow-text);">🔄 IN PROGRESS</div>
+      <div id="mt-inprog-list"></div>
+    </div>
+    <div id="mt-done-section">
+      <div class="mytasks-section-label" style="color:var(--green);">✅ COMPLETED</div>
+      <div id="mt-done-list"></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     TAB: TEAM
+══════════════════════════════════════ -->
+<div class="tab-panel" id="panel-team">
+  <div class="team-main">
+    <div style="font-size:9px;font-weight:800;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);">
+      TEAM TASK VIEW — ECH MANAGEMENT SERVICES LLC
+    </div>
+    <div class="team-cols">
+
+      <!-- JERRY COLUMN -->
+      <div class="team-col">
+        <div class="team-col-header">
+          <div class="team-col-title" style="color:var(--green);">
+            <span style="display:inline-block;width:24px;height:24px;border-radius:50%;background:#1a3d2b;border:1px solid var(--green);text-align:center;line-height:24px;font-size:11px;margin-right:6px;">JE</span>
+            JERRY — OWNER
+          </div>
+          <div class="team-col-progress-track"><div class="team-col-progress-fill" id="jerry-bar" style="width:0%;background:var(--green)"></div></div>
+          <div class="team-col-stats">
+            <div class="team-col-stat">Done: <span id="jerry-done">0</span></div>
+            <div class="team-col-stat">Open: <span id="jerry-open">0</span></div>
+            <div class="team-col-stat">Total: <span id="jerry-total">0</span></div>
+          </div>
+        </div>
+        <div id="jerry-task-list"><!-- populated by JS --></div>
+      </div>
+
+      <!-- ASHLEY COLUMN -->
+      <div class="team-col">
+        <div class="team-col-header">
+          <div class="team-col-title" style="color:#9fa8da;">
+            <span style="display:inline-block;width:24px;height:24px;border-radius:50%;background:#1a1a40;border:1px solid #3d3d80;text-align:center;line-height:24px;font-size:11px;margin-right:6px;">A</span>
+            ASHLEY — OPS
+          </div>
+          <div class="team-col-progress-track"><div class="team-col-progress-fill" id="ashley-bar" style="width:0%;background:#7c6af7"></div></div>
+          <div class="team-col-stats">
+            <div class="team-col-stat">Done: <span id="ashley-done">0</span></div>
+            <div class="team-col-stat">Open: <span id="ashley-open">0</span></div>
+            <div class="team-col-stat">Total: <span id="ashley-total">0</span></div>
+          </div>
+        </div>
+        <div id="ashley-task-list"><!-- populated by JS --></div>
+      </div>
+
+    </div>
+
+    <!-- BLOCKING ITEMS note -->
+    <div style="margin-top:14px;background:var(--surface);border:1px solid #3d2800;border-radius:8px;padding:14px;">
+      <div style="font-size:9px;font-weight:800;letter-spacing:2px;color:var(--yellow-text);text-transform:uppercase;margin-bottom:8px;">⚠ BLOCKING — ASHLEY ITEMS UNBLOCK JERRY</div>
+      <div style="font-size:11px;color:var(--text-dim);line-height:1.7;">
+        → Ashley sets up DocuSign account → unlocks DocuSign MCP form + Cowork connector<br>
+        → Ashley logs into Team account → unlocks Team collaboration features<br>
+        → Ashley populates RentRedi rent roll → unlocks live occupancy reporting
+      </div>
+    </div>
+  </div>
+  <div class="footer">ECH MANAGEMENT SERVICES LLC — TEAM PLAN — V3 — CONFIDENTIAL</div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     TAB: PUNCH LIST
+══════════════════════════════════════ -->
+<div class="tab-panel" id="panel-punch-list">
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>COMPLETE</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>NEEDED</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--yellow)"></div>IN PROGRESS</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>UPCOMING</div>
+  </div>
+  <div class="filters">
+    <button class="filter-btn active" onclick="filter('all')">ALL</button>
+    <button class="filter-btn" onclick="filter('needed')">⛔ NEEDED</button>
+    <button class="filter-btn" onclick="filter('inprog')">🔄 IN PROG</button>
+    <button class="filter-btn" onclick="filter('done')">✅ DONE</button>
+    <button class="filter-btn" onclick="filter('p1')">🔴 P1</button>
+    <button class="filter-btn" onclick="filter('p2')">🟡 P2</button>
+    <button class="filter-btn" onclick="expandAll()">EXPAND</button>
+    <button class="filter-btn" onclick="collapseAll()">COLLAPSE</button>
+  </div>
+  <div class="main">
+    <div class="summary-cards">
+      <div class="summary-card card-green"><div class="card-number" id="count-done">0</div><div class="card-label">Complete</div></div>
+      <div class="summary-card card-red"><div class="card-number" id="count-needed">0</div><div class="card-label">Needed</div></div>
+      <div class="summary-card" style="border-color:#444"><div class="card-number" id="count-inprog" style="color:var(--yellow)">0</div><div class="card-label">In Prog</div></div>
+      <div class="summary-card" style="border-color:#333"><div class="card-number" id="count-upcoming" style="color:var(--blue-text)">0</div><div class="card-label">Upcoming</div></div>
+    </div>
+
+<!-- S1 -->
+<div class="section" id="s1">
+  <div class="section-header" onclick="toggleSection('s1')">
+    <span class="section-title">Section 1 — Export &amp; Account</span>
+    <div class="section-meta"><span class="section-tag tag-prereq">prereq</span><span class="section-count" id="s1-count"></span><span class="chevron">▼</span></div>
+  </div>
+  <div class="section-progress-bar"><div class="section-progress-fill" id="s1-bar"></div></div>
+  <div class="section-body">
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">Export Pro account data — Settings → Privacy → Export Data → save to Drive 05_SESSION_LOGS + local backup</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">Cancel Pro subscription — Settings → Billing</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">Create Team account at claude.ai/upgrade using jerry.eads@echmanagement.services</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Invite Ashley as second seat — Standard seat</div><div class="item-tags"><span class="item-tag p1">P1</span><span class="item-tag ashley-tag">ASHLEY</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Ashley: log into new Team account on Claude Desktop and confirm access</div><div class="item-tags"><span class="item-tag p1">P1</span><span class="item-tag ashley-tag">ASHLEY</span></div></div></div>
+  </div>
+</div>
+
+<!-- S2 -->
+<div class="section" id="s2">
+  <div class="section-header" onclick="toggleSection('s2')">
+    <span class="section-title">Section 2 — Boot Prompt</span>
+    <div class="section-meta"><span class="section-tag tag-day1">day 1</span><span class="section-count" id="s2-count"></span><span class="chevron">▼</span></div>
+  </div>
+  <div class="section-progress-bar"><div class="section-progress-fill" id="s2-bar"></div></div>
+  <div class="section-body">
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">Paste TARS BOOT PROMPT V1 as first message in new Team account</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">Confirm TARS ONLINE — TEAM EDITION response received</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">Upload migration files: conversations.json, memories.json, projects.json, TARS_MEMORY.docx, COWORK CONVERSATIONS.docx</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Add all 14 memory entries from Section 7 migration checklist via Memory tool</div><div class="item-tags"><span class="item-tag p1">P1</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Confirm V16 Operating Manual is uploaded and set as locked baseline</div><div class="item-tags"><span class="item-tag p1">P1</span></div></div></div>
+  </div>
+</div>
+
+<!-- S3 -->
+<div class="section" id="s3">
+  <div class="section-header" onclick="toggleSection('s3')">
+    <span class="section-title">Section 3 — AI Executive Team (17 Projects)</span>
+    <div class="section-meta"><span class="section-tag tag-rebuild">rebuild</span><span class="section-count" id="s3-count"></span><span class="chevron">▼</span></div>
+  </div>
+  <div class="section-progress-bar"><div class="section-progress-fill" id="s3-bar"></div></div>
+  <div class="section-body">
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">DIGITAL_JERRY_OPERATIONS — created, instructions loaded, V16 + doctrine uploaded, tested</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">GPT_VIRTUAL_CHIEF_OF_STAFF — created, instructions loaded, tested</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">GPT_FINANCIAL_CONTROLLER — created, instructions loaded, tested</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">GPT_PORTFOLIO_CFO — created, instructions loaded, tested</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">GPT_TREASURY_LIQUIDITY_CONTROL — created, instructions loaded, tested</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">GPT_MASTER_EXECUTIVE_DASHBOARD — created, instructions loaded, tested</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">GPT_INVESTMENT_COMMITTEE — created, instructions loaded, tested</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">GPT_ASSET_MANAGEMENT_STRATEGY — created, instructions loaded, tested</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">GPT_CONSTRUCTION_DEVELOPMENT_OVERSIGHT — created, instructions loaded, tested</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">GPT_PROPERTY_MANAGEMENT_GOVERNANCE — created, instructions loaded, tested</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">GPT_RISK_MANAGEMENT — created, instructions loaded, tested</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">GPT_LEGAL_GOVERNANCE — created, instructions loaded, tested</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">GPT_MARKET_RESEARCH — created, instructions loaded, tested</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">GPT_DESIGNER_VIRTUAL_STAGER — created, instructions loaded, tested</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">GPT_API_CONNECTOR_ARCHITECT — created, instructions loaded, tested</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Market Expert — verify instructions loaded, test against market queries</div><div class="item-tags"><span class="item-tag p2">P2</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Cross-test routing: confirm GPT_VIRTUAL_CHIEF_OF_STAFF correctly routes to all 16 downstream projects</div><div class="item-tags"><span class="item-tag p2">P2</span></div></div></div>
+  </div>
+</div>
+
+<!-- S4 -->
+<div class="section" id="s4">
+  <div class="section-header" onclick="toggleSection('s4')">
+    <span class="section-title">Section 4 — Cowork Connectors</span>
+    <div class="section-meta"><span class="section-tag tag-connect">connect</span><span class="section-count" id="s4-count"></span><span class="chevron">▼</span></div>
+  </div>
+  <div class="section-progress-bar"><div class="section-progress-fill" id="s4-bar"></div></div>
+  <div class="section-body">
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">Claude Desktop + Cowork installed on Ashley's office machine</div><div class="item-tags"><span class="item-tag done-tag">DONE</span><span class="item-tag ashley-tag">ASHLEY</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">Google Drive synced locally as G: drive on Ashley's machine</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">ECH-FINANCIAL-OPERATIONS skill built and enabled in Cowork</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">Google Drive connected in Cowork — ECH_MANAGEMENT_AI_FINANCIAL_SYSTEM vault accessible</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">QuickBooks Online connected in Cowork — ECH Management Services LLC account</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Ashley: Set up DocuSign production account — echmanagement.services domain</div><div class="item-tags"><span class="item-tag p2">P2</span><span class="item-tag ashley-tag">ASHLEY</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Fill out DocuSign MCP Beta access form — need production account email + account ID first</div><div class="item-tags"><span class="item-tag p2">P2</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Connect DocuSign in Cowork Connectors once account + MCP beta access confirmed</div><div class="item-tags"><span class="item-tag p2">P2</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Connect RentRedi — Claude in Chrome permanent login on Ashley's machine for automated rent roll reads</div><div class="item-tags"><span class="item-tag p1">P1</span><span class="item-tag ashley-tag">ASHLEY</span></div></div></div>
+    <div class="item inprog" onclick="toggleItem(this)"><div class="checkbox">~</div><div class="item-content"><div class="item-text">Reventure App — awaiting API response. Chrome scrape fallback operational via scheduled task</div><div class="item-tags"><span class="item-tag p2">P2</span><span class="item-tag blocked-tag">AWAITING RESPONSE</span><span class="item-tag auto-tag">FALLBACK ACTIVE</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Verify Weekly Executive Pulse (Mondays 8:00 AM) is active on Teams account — test run</div><div class="item-tags"><span class="item-tag p1">P1</span><span class="item-tag auto-tag">SCHEDULED</span></div></div></div>
+  </div>
+</div>
+
+<!-- S5 -->
+<div class="section" id="s5">
+  <div class="section-header" onclick="toggleSection('s5')">
+    <span class="section-title">Section 5 — Google Drive Vault</span>
+    <div class="section-meta"><span class="section-tag tag-build">build</span><span class="section-count" id="s5-count"></span><span class="chevron">▼</span></div>
+  </div>
+  <div class="section-progress-bar"><div class="section-progress-fill" id="s5-bar"></div></div>
+  <div class="section-body">
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">Full audit of ECH_MANAGEMENT_AI_FINANCIAL_SYSTEM vault completed — corrected folder map delivered</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">All entity subfolders verified — EADS Industries, ECH Developments, ECH Management, construction entities</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">ECH_MANAGEMENT_AI_FINANCIAL_SYSTEM_VAULT_MAP_V1.docx generated and saved</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Create 06_AI_OPPORTUNITIES at vault root with subfolder 01_GPT_API_APP_ARCHITECT and 4 subfolders</div><div class="item-tags"><span class="item-tag p1">P1</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Build construction entity internal folder schemas — currently hollow</div><div class="item-tags"><span class="item-tag p2">P2</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Create JV/SPV entity folder branch — entirely missing from vault</div><div class="item-tags"><span class="item-tag p2">P2</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Add Risk/Watchlist folder to portfolio reporting layer</div><div class="item-tags"><span class="item-tag p2">P2</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Verify 05_DIGITAL_JERRY_SYSTEM contents complete in vault</div><div class="item-tags"><span class="item-tag p2">P2</span></div></div></div>
+  </div>
+</div>
+
+<!-- S6 -->
+<div class="section" id="s6">
+  <div class="section-header" onclick="toggleSection('s6')">
+    <span class="section-title">Section 6 — Financial Templates &amp; Files</span>
+    <div class="section-meta"><span class="section-tag tag-build">build</span><span class="section-count" id="s6-count"></span><span class="chevron">▼</span></div>
+  </div>
+  <div class="section-progress-bar"><div class="section-progress-fill" id="s6-bar"></div></div>
+  <div class="section-body">
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">14 V2 files built — 4 Word SOPs + 10 Excel templates, zero formula errors confirmed</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">A-ESS scoring system built — 4 weighted pillars, phase-gated thresholds, contamination locks</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">AI Financial Operations Manual V16 (Claude Edition) locked as current baseline</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Load live Altra Bank balances into all 3 weekly KPI input files before first Monday Pulse run</div><div class="item-tags"><span class="item-tag p1">P1</span><span class="item-tag manual-tag">MANUAL INPUT</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Clear 3 active A-ESS exceptions — identify, resolve, and document each</div><div class="item-tags"><span class="item-tag p1">P1</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Populate RENT_ROLL_MASTER_V2.xlsx with live RentRedi data</div><div class="item-tags"><span class="item-tag p1">P1</span><span class="item-tag ashley-tag">ASHLEY</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Build Lender Cover Sheet template</div><div class="item-tags"><span class="item-tag p2">P2</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Build Entity One-Pager template</div><div class="item-tags"><span class="item-tag p2">P2</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Build Draw Request Form template</div><div class="item-tags"><span class="item-tag p2">P2</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Build Lien Waiver template</div><div class="item-tags"><span class="item-tag p2">P2</span></div></div></div>
+  </div>
+</div>
+
+<!-- S7 -->
+<div class="section" id="s7">
+  <div class="section-header" onclick="toggleSection('s7')">
+    <span class="section-title">Section 7 — Weekly Executive Pulse</span>
+    <div class="section-meta"><span class="section-tag tag-ops">ops</span><span class="section-count" id="s7-count"></span><span class="chevron">▼</span></div>
+  </div>
+  <div class="section-progress-bar"><div class="section-progress-fill" id="s7-bar"></div></div>
+  <div class="section-body">
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">Weekly Executive Pulse scheduled — Mondays 8:00 AM recurring task built</div><div class="item-tags"><span class="item-tag done-tag">DONE</span><span class="item-tag auto-tag">AUTOMATED</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">Task reads KPI input files, runs A-ESS scoring cycle, saves output to Drive, flags RED exceptions</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Verify scheduled task is live on Teams account (not Pro) — confirm it fires correctly next Monday</div><div class="item-tags"><span class="item-tag p1">P1</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Run first live Monday pulse with real Altra Bank data — verify output and A-ESS scoring accuracy</div><div class="item-tags"><span class="item-tag p1">P1</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Set up RentRedi monthly auto-read (1st of month, 8:00 AM) via Claude in Chrome</div><div class="item-tags"><span class="item-tag p2">P2</span><span class="item-tag auto-tag">SCHEDULED</span></div></div></div>
+  </div>
+</div>
+
+<!-- S8 -->
+<div class="section" id="s8">
+  <div class="section-header" onclick="toggleSection('s8')">
+    <span class="section-title">Section 8 — AI Opportunities Pipeline</span>
+    <div class="section-meta"><span class="section-tag tag-pipeline">pipeline</span><span class="section-count" id="s8-count"></span><span class="chevron">▼</span></div>
+  </div>
+  <div class="section-progress-bar"><div class="section-progress-fill" id="s8-bar"></div></div>
+  <div class="section-body">
+    <div class="item inprog" onclick="toggleItem(this)"><div class="checkbox">~</div><div class="item-content"><div class="item-text">Reventure App — API outreach sent to helpdesk@reventure.app (Elijah). Awaiting escalation. Chrome fallback active.</div><div class="item-tags"><span class="item-tag p1">P1</span><span class="item-tag blocked-tag">AWAITING RESPONSE</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">RentRedi automation — RESOLVED via Claude in Chrome. Monthly rent roll read deployed.</div><div class="item-tags"><span class="item-tag done-tag">RESOLVED</span><span class="item-tag auto-tag">AUTO</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Create CASE_STUDY_001_REVENTURE_APP.docx → save to 06_AI_OPPORTUNITIES → 02_CASE_STUDIES</div><div class="item-tags"><span class="item-tag p2">P2</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Create CASE_STUDY_002_RENTREDI.docx → save to same location</div><div class="item-tags"><span class="item-tag p2">P2</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Create PARTNER_COMMS_REVENTURE_2026-04.docx → save to 04_PARTNER_COMMUNICATIONS</div><div class="item-tags"><span class="item-tag p2">P2</span></div></div></div>
+    <div class="item upcoming" onclick="toggleItem(this)"><div class="checkbox">→</div><div class="item-content"><div class="item-text">If Reventure partners: build MCP server connecting to their internal data endpoints</div><div class="item-tags"><span class="item-tag p3">P3</span></div></div></div>
+    <div class="item upcoming" onclick="toggleItem(this)"><div class="checkbox">→</div><div class="item-content"><div class="item-text">Monitor RentRedi for public API announcement — first mover opportunity</div><div class="item-tags"><span class="item-tag p3">P3</span></div></div></div>
+  </div>
+</div>
+
+<!-- S9 -->
+<div class="section" id="s9">
+  <div class="section-header" onclick="toggleSection('s9')">
+    <span class="section-title">Section 9 — Lending &amp; Capital Strategy</span>
+    <div class="section-meta"><span class="section-tag tag-active">active</span><span class="section-count" id="s9-count"></span><span class="chevron">▼</span></div>
+  </div>
+  <div class="section-progress-bar"><div class="section-progress-fill" id="s9-bar"></div></div>
+  <div class="section-body">
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">Altra Bank confirmed as primary bank across all entities. VeraBank = transient only / always $0.</div><div class="item-tags"><span class="item-tag done-tag">CONFIRMED</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">Global LTV 45-50%. Average DSCR ≈1.8. Liquidity reserve ≈$500K. Capital rules in A-ESS.</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item inprog" onclick="toggleItem(this)"><div class="checkbox">~</div><div class="item-content"><div class="item-text">Transitioning from deal-by-deal to programmatic lending — portfolio lines, revolvers, repeatable credit facilities</div><div class="item-tags"><span class="item-tag p2">P2</span><span class="item-tag blocked-tag">IN PROGRESS</span></div></div></div>
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Build Lender Packet — Lender Cover Sheet + Entity One-Pager + supporting docs</div><div class="item-tags"><span class="item-tag p2">P2</span></div></div></div>
+    <div class="item upcoming" onclick="toggleItem(this)"><div class="checkbox">→</div><div class="item-content"><div class="item-text">Scale portfolio from ≈100 to 200+ units — Mabank, Athens, Malakoff TX markets</div><div class="item-tags"><span class="item-tag p3">P3</span></div></div></div>
+  </div>
+</div>
+
+  </div><!-- end .main -->
+  <div class="footer">ECH MANAGEMENT SERVICES LLC / EADS INDUSTRIES LLC — TEAM PLAN — V3 — CONFIDENTIAL</div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     TAB: RESOURCES
+══════════════════════════════════════ -->
+<div class="tab-panel" id="panel-resources">
+  <div class="resources-main">
+    <div class="res-section-title">VAULT DOCUMENTS</div>
+    <div class="res-grid">
+      <div class="res-card featured">
+        <div class="res-card-icon">🗺️</div>
+        <div class="res-card-title">Vault Map V1</div>
+        <div class="res-card-desc">Complete folder + file tree of ECH_MANAGEMENT_AI_FINANCIAL_SYSTEM. 70+ folders, all entities, findings, priority actions. Built April 2026.</div>
+        <div class="res-card-status status-live">LIVE — BUILT</div>
+        <a class="res-btn btn-green" href="../ECH_MANAGEMENT_AI_FINANCIAL_SYSTEM_VAULT_MAP_V1.docx">⬇ OPEN VAULT MAP</a>
+      </div>
+      <div class="res-card">
+        <div class="res-card-icon">📋</div>
+        <div class="res-card-title">AI Financial Operations Manual V16</div>
+        <div class="res-card-desc">Claude Edition. Locked baseline. All capital rules, doctrine, behavioral settings, protocols.</div>
+        <div class="res-card-status status-pending">PENDING LINK</div>
+        <button class="res-btn btn-disabled">NOT YET LINKED</button>
+      </div>
+      <div class="res-card">
+        <div class="res-card-icon">📊</div>
+        <div class="res-card-title">Google Drive Vault</div>
+        <div class="res-card-desc">ECH_MANAGEMENT_AI_FINANCIAL_SYSTEM root. Drive authentication required.</div>
+        <div class="res-card-status status-live">DRIVE CONNECTED</div>
+        <a class="res-btn" href="https://drive.google.com" target="_blank">OPEN GOOGLE DRIVE ↗</a>
+      </div>
+    </div>
+    <div class="res-section-title">SYSTEM QUICK LINKS</div>
+    <div class="res-grid">
+      <div class="res-card">
+        <div class="res-card-icon">🤖</div>
+        <div class="res-card-title">Claude Teams</div>
+        <div class="res-card-desc">jerry.eads@echmanagement.services — Admin console, projects, usage, members.</div>
+        <div class="res-card-status status-live">ACTIVE</div>
+        <a class="res-btn" href="https://claude.ai" target="_blank">OPEN CLAUDE ↗</a>
+      </div>
+      <div class="res-card">
+        <div class="res-card-icon">💼</div>
+        <div class="res-card-title">QuickBooks Online</div>
+        <div class="res-card-desc">ECH Management Services LLC. Connected to Cowork. Read tools active.</div>
+        <div class="res-card-status status-live">CONNECTED</div>
+        <a class="res-btn" href="https://app.qbo.intuit.com" target="_blank">OPEN QBO ↗</a>
+      </div>
+      <div class="res-card">
+        <div class="res-card-icon">🏠</div>
+        <div class="res-card-title">RentRedi</div>
+        <div class="res-card-desc">Property mgmt + rent collection. Monthly auto-read via Chrome deployed. No native API yet.</div>
+        <div class="res-card-status status-live">CHROME AUTO ACTIVE</div>
+        <a class="res-btn" href="https://app.rentredi.com" target="_blank">OPEN RENTREDI ↗</a>
+      </div>
+      <div class="res-card">
+        <div class="res-card-icon">✍️</div>
+        <div class="res-card-title">DocuSign</div>
+        <div class="res-card-desc">No account yet. Ashley must create production account first.</div>
+        <div class="res-card-status status-missing">ACCOUNT MISSING</div>
+        <button class="res-btn btn-disabled">PENDING ASHLEY</button>
+      </div>
+      <div class="res-card">
+        <div class="res-card-icon">📍</div>
+        <div class="res-card-title">Reventure App</div>
+        <div class="res-card-desc">Market intelligence. API outreach sent. Chrome fallback operational.</div>
+        <div class="res-card-status status-pending">AWAITING API</div>
+        <a class="res-btn" href="https://reventure.app" target="_blank">OPEN REVENTURE ↗</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer">ECH MANAGEMENT SERVICES LLC — TEAM PLAN — V3 — CONFIDENTIAL</div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     TAB: STATUS
+══════════════════════════════════════ -->
+<div class="tab-panel" id="panel-status">
+  <div class="status-main">
+    <div class="cess-meter">
+      <div class="cess-header">
+        <div><div class="cess-title">A-ESS SCORING — LAST CYCLE</div><div style="font-size:10px;color:var(--text-dim);margin-top:3px;">4-pillar capital scoring · Phase-gated thresholds</div></div>
+        <div style="text-align:right"><div class="cess-score">—<span>/100</span></div><div style="font-size:8px;color:var(--yellow-text);margin-top:2px;">AWAITING FIRST LIVE RUN</div></div>
+      </div>
+      <div class="cess-pillars">
+        <div class="cess-pillar"><div class="cess-pillar-name">Liquidity</div><div class="cess-pillar-bar-track"><div class="cess-pillar-bar-fill" style="width:0%;background:var(--yellow)"></div></div><div class="cess-pillar-val" style="color:var(--text-dim)">—/25</div></div>
+        <div class="cess-pillar"><div class="cess-pillar-name">LTV/DSCR</div><div class="cess-pillar-bar-track"><div class="cess-pillar-bar-fill" style="width:0%;background:var(--green)"></div></div><div class="cess-pillar-val" style="color:var(--text-dim)">—/25</div></div>
+        <div class="cess-pillar"><div class="cess-pillar-name">Cash Flow</div><div class="cess-pillar-bar-track"><div class="cess-pillar-bar-fill" style="width:0%;background:var(--blue-text)"></div></div><div class="cess-pillar-val" style="color:var(--text-dim)">—/25</div></div>
+        <div class="cess-pillar"><div class="cess-pillar-name">Execution</div><div class="cess-pillar-bar-track"><div class="cess-pillar-bar-fill" style="width:0%;background:var(--purple)"></div></div><div class="cess-pillar-val" style="color:var(--text-dim)">—/25</div></div>
+      </div>
+    </div>
+    <div class="status-grid-2">
+      <div class="status-panel">
+        <div class="status-panel-header">CONNECTORS <span style="color:var(--green);font-size:8px;">2/6 LIVE</span></div>
+        <div class="connector-row"><div class="connector-name">Google Drive</div><div class="connector-detail">ECH vault accessible</div><span class="conn-badge conn-active">CONNECTED</span></div>
+        <div class="connector-row"><div class="connector-name">QuickBooks Online</div><div class="connector-detail">ECH Management LLC</div><span class="conn-badge conn-active">CONNECTED</span></div>
+        <div class="connector-row"><div class="connector-name">DocuSign</div><div class="connector-detail">No account yet</div><span class="conn-badge conn-missing">NO ACCOUNT</span></div>
+        <div class="connector-row"><div class="connector-name">RentRedi</div><div class="connector-detail">Chrome fallback active</div><span class="conn-badge conn-fallback">CHROME AUTO</span></div>
+        <div class="connector-row"><div class="connector-name">Reventure App</div><div class="connector-detail">API pending</div><span class="conn-badge conn-pending">PENDING</span></div>
+        <div class="connector-row"><div class="connector-name">Altra Bank</div><div class="connector-detail">Manual input only</div><span class="conn-badge conn-missing">NO API</span></div>
+      </div>
+      <div class="status-panel">
+        <div class="status-panel-header">SCHEDULED TASKS</div>
+        <div class="task-row"><div style="font-size:16px;">📊</div><div class="task-info"><div class="task-name">Weekly Executive Pulse</div><div class="task-schedule">Every Monday · 8:00 AM · KPI → A-ESS → Drive</div></div><span class="conn-badge conn-pending">VERIFY LIVE</span></div>
+        <div class="task-row"><div style="font-size:16px;">🏠</div><div class="task-info"><div class="task-name">RentRedi Monthly Read</div><div class="task-schedule">1st of month · 8:00 AM · Ashley's machine</div></div><span class="conn-badge conn-fallback">TO BUILD</span></div>
+        <div class="task-row"><div style="font-size:16px;">📍</div><div class="task-info"><div class="task-name">Reventure Market Scrape</div><div class="task-schedule">Recurring · Chrome fallback active</div></div><span class="conn-badge conn-active">ACTIVE</span></div>
+      </div>
+      <div class="status-panel">
+        <div class="status-panel-header">TEAM <span style="color:var(--text-dim);font-size:8px;">1/2 SEATS ACTIVE</span></div>
+        <div class="team-row"><div class="team-avatar avatar-jerry">JE</div><div class="team-info"><div class="team-name">Jerry Eads</div><div class="team-role">Owner · jerry.eads@echmanagement.services · Admin</div></div><span class="conn-badge conn-active">ACTIVE</span></div>
+        <div class="team-row"><div class="team-avatar avatar-ashley">A</div><div class="team-info"><div class="team-name">Ashley</div><div class="team-role">Operations · Standard seat · Invite pending</div></div><span class="conn-badge conn-missing">NOT INVITED</span></div>
+      </div>
+      <div class="status-panel">
+        <div class="status-panel-header">CAPITAL RULES — HARDWIRED</div>
+        <div class="connector-row"><div class="connector-name">Global LTV</div><div class="connector-detail">Portfolio ceiling</div><span class="conn-badge conn-active">45–50%</span></div>
+        <div class="connector-row"><div class="connector-name">Average DSCR</div><div class="connector-detail">Debt coverage floor</div><span class="conn-badge conn-active">≈ 1.8×</span></div>
+        <div class="connector-row"><div class="connector-name">Liquidity Reserve</div><div class="connector-detail">Minimum at all times</div><span class="conn-badge conn-active">≈ $500K</span></div>
+        <div class="connector-row"><div class="connector-name">Primary Bank</div><div class="connector-detail">All entities</div><span class="conn-badge conn-active">ALTRA BANK</span></div>
+        <div class="connector-row"><div class="connector-name">VeraBank</div><div class="connector-detail">Transient only</div><span class="conn-badge" style="background:#1a1a1a;color:#555;border:1px solid #333;">ALWAYS $0</span></div>
+        <div class="connector-row"><div class="connector-name">Portfolio Target</div><div class="connector-detail">Unit count</div><span class="conn-badge conn-pending">100 → 200+ UNITS</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">ECH MANAGEMENT SERVICES LLC — TEAM PLAN — V3 — CONFIDENTIAL</div>
+</div>
+
+
+<script>
+// ══════════════════════════════════════
+//  PWA — SERVICE WORKER
+// ══════════════════════════════════════
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
+
+// ══════════════════════════════════════
+//  PERSONA
+// ══════════════════════════════════════
+let persona = localStorage.getItem('tars_persona') || 'jerry';
+
+function setPersona(p) {
+  persona = p;
+  localStorage.setItem('tars_persona', p);
+  document.getElementById('persona-modal').classList.add('hidden');
+  applyPersona();
+  renderMyTasks();
+  renderTeam();
+}
+
+function showSignoffModal() {
+  document.getElementById('signoff-modal').classList.remove('hidden');
+}
+function hideSignoffModal() {
+  document.getElementById('signoff-modal').classList.add('hidden');
+  const btn = document.getElementById('signoff-copy-btn');
+  btn.textContent = '📋 COPY COMMAND';
+  btn.classList.remove('copied');
+}
+function copySignoffCommand() {
+  const cmd = document.getElementById('signoff-cmd').innerText;
+  navigator.clipboard.writeText(cmd).then(() => {
+    const btn = document.getElementById('signoff-copy-btn');
+    btn.textContent = '✓ COPIED — PASTE INTO TARS';
+    btn.classList.add('copied');
+  });
+}
+document.getElementById('signoff-modal').addEventListener('click', function(e) {
+  if (e.target === this) hideSignoffModal();
+});
+
+function showPersonaModal() {
+  document.getElementById('persona-modal').classList.remove('hidden');
+}
+
+function applyPersona() {
+  const av   = document.getElementById('persona-avatar');
+  const nm   = document.getElementById('persona-name');
+  const greet = document.getElementById('mt-greeting');
+  const sub   = document.getElementById('mt-sub');
+  if (persona === 'ashley') {
+    av.textContent = 'A';
+    av.style.background = '#1a1a40';
+    av.style.color = '#9fa8da';
+    av.style.border = '1px solid #3d3d80';
+    nm.textContent = 'ASHLEY';
+    greet.textContent = 'Hey Ashley.';
+    sub.textContent = 'Here\'s what\'s on your plate.';
+  } else {
+    av.textContent = 'JE';
+    av.style.background = '#1a3d2b';
+    av.style.color = '#00e676';
+    av.style.border = '1px solid #00e676';
+    nm.textContent = 'JERRY';
+    greet.textContent = getGreeting() + ', Jerry.';
+    sub.textContent = 'Here\'s what\'s on your plate.';
+  }
+}
+
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 12) return 'Good morning';
+  if (h < 17) return 'Good afternoon';
+  return 'Good evening';
+}
+
+// ══════════════════════════════════════
+//  TAB SWITCHING
+// ══════════════════════════════════════
+function switchTab(id) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+}
+
+// ══════════════════════════════════════
+//  PUNCH LIST
+// ══════════════════════════════════════
+let filterMode = 'all';
+
+function toggleItem(el) {
+  if (el.classList.contains('done'))          { el.classList.replace('done','needed');   el.querySelector('.checkbox').textContent = ''; }
+  else if (el.classList.contains('needed'))   { el.classList.replace('needed','done');   el.querySelector('.checkbox').textContent = '✓'; }
+  else if (el.classList.contains('inprog'))   { el.classList.replace('inprog','done');   el.querySelector('.checkbox').textContent = '✓'; }
+  else if (el.classList.contains('upcoming')) { el.classList.replace('upcoming','done'); el.querySelector('.checkbox').textContent = '✓'; }
+  updateAll();
+  renderMyTasks();
+  renderTeam();
+}
+
+function toggleSection(id) { document.getElementById(id).classList.toggle('collapsed'); }
+function expandAll()  { document.querySelectorAll('.section').forEach(s => s.classList.remove('collapsed')); }
+function collapseAll(){ document.querySelectorAll('.section').forEach(s => s.classList.add('collapsed')); }
+
+function filter(mode) {
+  filterMode = mode;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('#panel-punch-list .item').forEach(item => {
+    let show = true;
+    if (mode === 'done')   show = item.classList.contains('done');
+    if (mode === 'needed') show = item.classList.contains('needed');
+    if (mode === 'inprog') show = item.classList.contains('inprog');
+    if (mode === 'p1')     show = !!item.querySelector('.p1');
+    if (mode === 'p2')     show = !!item.querySelector('.p2');
+    item.style.display = show ? 'flex' : 'none';
+  });
+}
+
+function updateAll() {
+  const sids = ['s1','s2','s3','s4','s5','s6','s7','s8','s9'];
+  let tDone = 0, tAll = 0, cD = 0, cN = 0, cI = 0, cU = 0;
+  sids.forEach(sid => {
+    const sec = document.getElementById(sid);
+    const items = sec.querySelectorAll('.item');
+    const done  = sec.querySelectorAll('.item.done').length;
+    const total = items.length;
+    document.getElementById(sid+'-count').textContent = done + ' / ' + total;
+    document.getElementById(sid+'-bar').style.width = (total > 0 ? Math.round(done/total*100) : 0) + '%';
+    tDone += done; tAll += total;
+  });
+  document.querySelectorAll('#panel-punch-list .item').forEach(i => {
+    if      (i.classList.contains('done'))     cD++;
+    else if (i.classList.contains('needed'))   cN++;
+    else if (i.classList.contains('inprog'))   cI++;
+    else if (i.classList.contains('upcoming')) cU++;
+  });
+  const gPct = tAll > 0 ? Math.round(tDone/tAll*100) : 0;
+  document.getElementById('global-label').textContent = tDone + ' of ' + tAll + ' complete';
+  document.getElementById('global-bar').style.width   = gPct + '%';
+  document.getElementById('global-pct').textContent   = gPct + '%';
+  document.getElementById('count-done').textContent     = cD;
+  document.getElementById('count-needed').textContent   = cN;
+  document.getElementById('count-inprog').textContent   = cI;
+  document.getElementById('count-upcoming').textContent = cU;
+  document.getElementById('tab-punch-count').textContent = tDone + '/' + tAll;
+}
+
+// ══════════════════════════════════════
+//  MY TASKS — RENDER
+// ══════════════════════════════════════
+function isAshleyItem(item) { return !!item.querySelector('.ashley-tag'); }
+
+function getStatusClass(item) {
+  if (item.classList.contains('done'))     return 'done';
+  if (item.classList.contains('inprog'))   return 'inprog';
+  if (item.classList.contains('upcoming')) return 'upcoming';
+  return 'needed';
+}
+
+function renderMyTasks() {
+  const allItems = Array.from(document.querySelectorAll('#panel-punch-list .item'));
+  let myItems;
+  if (persona === 'ashley') {
+    myItems = allItems.filter(i => isAshleyItem(i));
+  } else {
+    // Jerry sees all non-Ashley items (he owns everything else)
+    myItems = allItems.filter(i => !isAshleyItem(i));
+  }
+
+  const p1list   = document.getElementById('mt-p1-list');
+  const openlist = document.getElementById('mt-open-list');
+  const inplist  = document.getElementById('mt-inprog-list');
+  const donelist = document.getElementById('mt-done-list');
+  p1list.innerHTML = openlist.innerHTML = inplist.innerHTML = donelist.innerHTML = '';
+
+  let done = 0, open = 0, inprog = 0, p1count = 0;
+
+  myItems.forEach(src => {
+    const status = getStatusClass(src);
+    const text   = src.querySelector('.item-text').textContent;
+    const hasP1  = !!src.querySelector('.p1');
+    const clone  = document.createElement('div');
+    clone.className = 'mytask-item ' + status;
+    const cbText = status === 'done' ? '✓' : (status === 'inprog' ? '~' : (status === 'upcoming' ? '→' : ''));
+    clone.innerHTML = `<div class="checkbox" style="${status==='done'?'background:var(--green);border-color:var(--green);color:#000;font-weight:900;':''}${status==='inprog'?'border-color:var(--yellow);background:var(--yellow-dim);':''}">${cbText}</div><div class="item-content"><div class="item-text">${text}</div></div>`;
+    clone.onclick = () => { src.click(); };
+
+    if (status === 'done') { donelist.appendChild(clone); done++; }
+    else if (status === 'inprog') { inplist.appendChild(clone); inprog++; }
+    else if (status === 'upcoming') { /* skip from counts but show in open */ openlist.appendChild(clone); }
+    else { // needed
+      open++;
+      if (hasP1) { p1count++; const p1clone = clone.cloneNode(true); p1clone.onclick = () => { src.click(); }; p1list.appendChild(p1clone); }
+      openlist.appendChild(clone);
+    }
+  });
+
+  const total = myItems.length;
+  document.getElementById('mt-done').textContent   = done;
+  document.getElementById('mt-open').textContent   = open;
+  document.getElementById('mt-inprog').textContent = inprog;
+  document.getElementById('mt-p1').textContent     = p1count;
+  document.getElementById('mt-bar-label').textContent = done + ' of ' + total + ' complete';
+  document.getElementById('mt-bar').style.width = (total > 0 ? Math.round(done/total*100) : 0) + '%';
+
+  // Hide empty sections
+  document.getElementById('mt-p1-section').style.display  = p1list.children.length  ? '' : 'none';
+  document.getElementById('mt-inprog-section').style.display = inplist.children.length ? '' : 'none';
+  document.getElementById('mt-done-section').style.display  = donelist.children.length ? '' : 'none';
+}
+
+// ══════════════════════════════════════
+//  TEAM — RENDER
+// ══════════════════════════════════════
+function renderTeam() {
+  const allItems = Array.from(document.querySelectorAll('#panel-punch-list .item'));
+  const jerryItems  = allItems.filter(i => !isAshleyItem(i));
+  const ashleyItems = allItems.filter(i => isAshleyItem(i));
+
+  function buildList(container, items) {
+    container.innerHTML = '';
+    let done = 0, open = 0;
+    items.forEach(src => {
+      const status = getStatusClass(src);
+      const text   = src.querySelector('.item-text').textContent;
+      const hasP1  = !!src.querySelector('.p1');
+      const row = document.createElement('div');
+      row.className = 'team-item-row ' + status;
+      const dotColor = status === 'done' ? 'var(--green)' : status === 'inprog' ? 'var(--yellow)' : status === 'upcoming' ? 'var(--blue)' : 'var(--red)';
+      row.innerHTML = `<div class="team-item-dot ${status}" style="background:${dotColor}"></div><div class="team-item-text">${text}${hasP1 ? ' <span class="team-badge p1">P1</span>' : ''}</div>`;
+      container.appendChild(row);
+      if (status === 'done') done++;
+      else if (status !== 'upcoming') open++;
+    });
+    return { done, open, total: items.length };
+  }
+
+  const jStats = buildList(document.getElementById('jerry-task-list'), jerryItems);
+  const aStats = buildList(document.getElementById('ashley-task-list'), ashleyItems);
+
+  document.getElementById('jerry-done').textContent  = jStats.done;
+  document.getElementById('jerry-open').textContent  = jStats.open;
+  document.getElementById('jerry-total').textContent = jStats.total;
+  document.getElementById('jerry-bar').style.width   = jStats.total > 0 ? Math.round(jStats.done/jStats.total*100)+'%' : '0%';
+
+  document.getElementById('ashley-done').textContent  = aStats.done;
+  document.getElementById('ashley-open').textContent  = aStats.open;
+  document.getElementById('ashley-total').textContent = aStats.total;
+  document.getElementById('ashley-bar').style.width   = aStats.total > 0 ? Math.round(aStats.done/aStats.total*100)+'%' : '0%';
+
+  document.getElementById('team-count').textContent = (jStats.open + aStats.open) + ' open';
+}
+
+// ══════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  updateAll();
+  applyPersona();
+  renderMyTasks();
+  renderTeam();
+});
+updateAll();
+applyPersona();
+renderMyTasks();
+renderTeam();
+</script>
+</body>
+</html>
