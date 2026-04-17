@@ -692,6 +692,99 @@ Deliver the end-of-day briefing.</div>
 ══════════════════════════════════════ -->
 <div class="tab-panel" id="panel-resources">
   <div class="resources-main">
+
+    <div class="res-section-title">CONNECTED TOOLS — LIVE AS OF APR 17, 2026</div>
+    <div class="res-grid">
+      <div class="res-card featured">
+        <div class="res-card-icon">📧</div>
+        <div class="res-card-title">Gmail</div>
+        <div class="res-card-desc">Read, draft, and send email. Tenant comms, vendor coordination, automated reports. jerry.eads@echmanagement.services</div>
+        <div class="res-card-status status-live">CONNECTED</div>
+        <a class="res-btn btn-green" href="https://mail.google.com" target="_blank">OPEN GMAIL ↗</a>
+      </div>
+      <div class="res-card featured">
+        <div class="res-card-icon">📅</div>
+        <div class="res-card-title">Google Calendar</div>
+        <div class="res-card-desc">Create and manage events, find free time, schedule maintenance and appointments. Central Time zone.</div>
+        <div class="res-card-status status-live">CONNECTED</div>
+        <a class="res-btn btn-green" href="https://calendar.google.com" target="_blank">OPEN CALENDAR ↗</a>
+      </div>
+      <div class="res-card featured">
+        <div class="res-card-icon">✍️</div>
+        <div class="res-card-title">DocuSign</div>
+        <div class="res-card-desc">Send lease agreements and contracts for signature. 14-day trial active — select plan before expiry.</div>
+        <div class="res-card-status status-pending">14-DAY TRIAL</div>
+        <a class="res-btn" href="https://www.docusign.com" target="_blank">OPEN DOCUSIGN ↗</a>
+      </div>
+      <div class="res-card featured">
+        <div class="res-card-icon">💬</div>
+        <div class="res-card-title">Slack</div>
+        <div class="res-card-desc">ECH Management Services workspace. TARS sends daily status updates and alerts here. 34 tools connected.</div>
+        <div class="res-card-status status-live">CONNECTED</div>
+        <a class="res-btn btn-green" href="https://echmanagementservices.slack.com" target="_blank">OPEN SLACK ↗</a>
+      </div>
+      <div class="res-card featured">
+        <div class="res-card-icon">⚡</div>
+        <div class="res-card-title">Zapier Bridge</div>
+        <div class="res-card-desc">183+ tools connected: Google Sheets, Docs, Drive, Gmail, Calendar, QuickBooks (47), SMS, Zapier Tables.</div>
+        <div class="res-card-status status-live">183+ TOOLS</div>
+        <a class="res-btn btn-green" href="https://zapier.com" target="_blank">OPEN ZAPIER ↗</a>
+      </div>
+      <div class="res-card">
+        <div class="res-card-icon">🐙</div>
+        <div class="res-card-title">GitHub — Auto Deploy</div>
+        <div class="res-card-desc">TARS pushes updates → Command Center auto-publishes. PAT token active. Repo: ECH-MANAGEMENT/TARS-COMMAND-CENTER</div>
+        <div class="res-card-status status-live">PIPELINE LIVE</div>
+        <a class="res-btn" href="https://github.com/ECH-MANAGEMENT/TARS-COMMAND-CENTER" target="_blank">OPEN GITHUB ↗</a>
+      </div>
+      <div class="res-card">
+        <div class="res-card-icon">📊</div>
+        <div class="res-card-title">Google Sheets via Zapier</div>
+        <div class="res-card-desc">28 tools. Rent roll, KPI tracking, financial data. RentRedi and Altra Bank CSV export destination.</div>
+        <div class="res-card-status status-live">CONNECTED</div>
+        <a class="res-btn" href="https://sheets.google.com" target="_blank">OPEN SHEETS ↗</a>
+      </div>
+      <div class="res-card">
+        <div class="res-card-icon">📱</div>
+        <div class="res-card-title">SMS by Zapier</div>
+        <div class="res-card-desc">TARS can send text messages directly to tenants, vendors, and team members.</div>
+        <div class="res-card-status status-live">CONNECTED</div>
+        <button class="res-btn">USED VIA TARS</button>
+      </div>
+    </div>
+
+    <div class="res-section-title">CSV INBOX WORKFLOW — NO API CONNECTORS</div>
+    <div class="res-grid">
+      <div class="res-card">
+        <div class="res-card-icon">🏠</div>
+        <div class="res-card-title">RentRedi</div>
+        <div class="res-card-desc">No direct API. Export CSV from RentRedi → drop in CLAUDE_WORKSPACE/INBOX → TARS reads and processes automatically.</div>
+        <div class="res-card-status status-pending">CSV WORKFLOW</div>
+        <a class="res-btn" href="https://app.rentredi.com" target="_blank">OPEN RENTREDI ↗</a>
+      </div>
+      <div class="res-card">
+        <div class="res-card-icon">🏦</div>
+        <div class="res-card-title">Altra Bank</div>
+        <div class="res-card-desc">No direct API. Download statements → drop in CLAUDE_WORKSPACE/INBOX → TARS reads balances and transactions.</div>
+        <div class="res-card-status status-pending">CSV WORKFLOW</div>
+        <button class="res-btn">DOWNLOAD FROM BANK PORTAL</button>
+      </div>
+      <div class="res-card">
+        <div class="res-card-icon">📍</div>
+        <div class="res-card-title">Reventure App</div>
+        <div class="res-card-desc">Market intelligence. No Zapier integration. Access directly via browser for market research.</div>
+        <div class="res-card-status status-pending">AWAITING API</div>
+        <a class="res-btn" href="https://reventure.app" target="_blank">OPEN REVENTURE ↗</a>
+      </div>
+      <div class="res-card">
+        <div class="res-card-icon">🏘️</div>
+        <div class="res-card-title">DealCheck</div>
+        <div class="res-card-desc">Real estate deal analysis. No Zapier integration. Export reports → drop in INBOX for TARS processing.</div>
+        <div class="res-card-status status-pending">CSV WORKFLOW</div>
+        <a class="res-btn" href="https://dealcheck.io" target="_blank">OPEN DEALCHECK ↗</a>
+      </div>
+    </div>
+
     <div class="res-section-title">VAULT DOCUMENTS</div>
     <div class="res-grid">
       <div class="res-card featured">
@@ -778,13 +871,19 @@ Deliver the end-of-day briefing.</div>
     </div>
     <div class="status-grid-2">
       <div class="status-panel">
-        <div class="status-panel-header">CONNECTORS <span style="color:var(--green);font-size:8px;">2/6 LIVE</span></div>
+        <div class="status-panel-header">CONNECTORS <span style="color:var(--green);font-size:8px;">8/12 LIVE</span></div>
+        <div class="connector-row"><div class="connector-name">Gmail</div><div class="connector-detail">jerry.eads / echmanagementserv</div><span class="conn-badge conn-active">CONNECTED</span></div>
+        <div class="connector-row"><div class="connector-name">Google Calendar</div><div class="connector-detail">Central Time · Main + Holidays</div><span class="conn-badge conn-active">CONNECTED</span></div>
         <div class="connector-row"><div class="connector-name">Google Drive</div><div class="connector-detail">ECH vault accessible</div><span class="conn-badge conn-active">CONNECTED</span></div>
-        <div class="connector-row"><div class="connector-name">QuickBooks Online</div><div class="connector-detail">ECH Management LLC</div><span class="conn-badge conn-active">CONNECTED</span></div>
-        <div class="connector-row"><div class="connector-name">DocuSign</div><div class="connector-detail">No account yet</div><span class="conn-badge conn-missing">NO ACCOUNT</span></div>
-        <div class="connector-row"><div class="connector-name">RentRedi</div><div class="connector-detail">Chrome fallback active</div><span class="conn-badge conn-fallback">CHROME AUTO</span></div>
-        <div class="connector-row"><div class="connector-name">Reventure App</div><div class="connector-detail">API pending</div><span class="conn-badge conn-pending">PENDING</span></div>
-        <div class="connector-row"><div class="connector-name">Altra Bank</div><div class="connector-detail">Manual input only</div><span class="conn-badge conn-missing">NO API</span></div>
+        <div class="connector-row"><div class="connector-name">DocuSign</div><div class="connector-detail">14-day trial — needs plan</div><span class="conn-badge conn-pending">TRIAL</span></div>
+        <div class="connector-row"><div class="connector-name">Slack</div><div class="connector-detail">ECH Management Services WS</div><span class="conn-badge conn-active">CONNECTED</span></div>
+        <div class="connector-row"><div class="connector-name">Zapier (183+ tools)</div><div class="connector-detail">Sheets, Docs, QB, SMS, Drive</div><span class="conn-badge conn-active">CONNECTED</span></div>
+        <div class="connector-row"><div class="connector-name">QuickBooks Online</div><div class="connector-detail">Auth fix pending</div><span class="conn-badge conn-pending">AUTH PENDING</span></div>
+        <div class="connector-row"><div class="connector-name">Filesystem</div><div class="connector-detail">C:\ and G:\ drive</div><span class="conn-badge conn-active">CONNECTED</span></div>
+        <div class="connector-row"><div class="connector-name">RentRedi</div><div class="connector-detail">CSV to INBOX workflow</div><span class="conn-badge conn-fallback">CSV WORKFLOW</span></div>
+        <div class="connector-row"><div class="connector-name">Altra Bank</div><div class="connector-detail">Statement download to INBOX</div><span class="conn-badge conn-fallback">CSV WORKFLOW</span></div>
+        <div class="connector-row"><div class="connector-name">Reventure App</div><div class="connector-detail">No Zapier integration</div><span class="conn-badge conn-pending">BROWSER ONLY</span></div>
+        <div class="connector-row"><div class="connector-name">DealCheck</div><div class="connector-detail">No Zapier integration</div><span class="conn-badge conn-pending">BROWSER ONLY</span></div>
       </div>
       <div class="status-panel">
         <div class="status-panel-header">SCHEDULED TASKS</div>
