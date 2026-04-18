@@ -85,6 +85,11 @@ body{color:var(--text);font-family:'Segoe UI',system-ui,-apple-system,sans-serif
 /* ── SIGN OFF BUTTON ── */
 .signoff-btn{background:var(--red-dim);color:var(--red-text);border:1px solid var(--red);padding:5px 10px;border-radius:6px;font-size:9px;font-weight:900;letter-spacing:1px;cursor:pointer;text-transform:uppercase;transition:all .15s;white-space:nowrap;}
 .signoff-btn:hover{background:var(--red);color:#fff;}
+@media(max-width:480px){
+  .signoff-btn{font-size:8px;padding:5px 7px;letter-spacing:0;}
+  .persona-chip-name,.persona-chip-icon{display:none;}
+  .persona-chip{padding:4px 7px;}
+}
 
 /* ── SIGNOFF MODAL ── */
 .signoff-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:600;display:flex;align-items:center;justify-content:center;padding:20px;}
@@ -366,6 +371,14 @@ Deliver the end-of-day briefing.</div>
     <button class="tab-btn" onclick="switchTab('status')" id="tab-status">🔌 STATUS</button>
   </div>
 </div>
+
+<!-- ══ MOBILE BOOT BAR ══ -->
+<div id="mobile-boot-bar" style="display:none;background:var(--blue-dim);border-bottom:1px solid var(--blue);padding:8px 16px;">
+  <button onclick="copyBootCommand()" style="width:100%;background:transparent;border:1px solid var(--blue);color:var(--blue-text);font-size:10px;font-weight:900;letter-spacing:1.5px;padding:8px;border-radius:6px;cursor:pointer;text-transform:uppercase;">⚡ COPY BOOT COMMAND — PASTE INTO PHONE CLAUDE</button>
+</div>
+<script>
+  if(window.innerWidth <= 480){ document.getElementById('mobile-boot-bar').style.display='block'; }
+</script>
 
 
 <!-- ══════════════════════════════════════
