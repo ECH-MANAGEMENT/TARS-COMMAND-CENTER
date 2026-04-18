@@ -85,7 +85,10 @@ body{color:var(--text);font-family:'Segoe UI',system-ui,-apple-system,sans-serif
 /* ── SIGN OFF BUTTON ── */
 .signoff-btn{background:var(--red-dim);color:var(--red-text);border:1px solid var(--red);padding:5px 10px;border-radius:6px;font-size:9px;font-weight:900;letter-spacing:1px;cursor:pointer;text-transform:uppercase;transition:all .15s;white-space:nowrap;}
 .signoff-btn:hover{background:var(--red);color:#fff;}
-@media(max-width:480px){
+@media(max-width:540px){
+  .header-top{flex-wrap:wrap;}
+  .header-left{width:100%;justify-content:center;text-align:center;}
+  .header-left .title{font-size:15px;}
   .signoff-btn{font-size:8px;padding:5px 7px;letter-spacing:0;}
   .persona-chip-name,.persona-chip-icon{display:none;}
   .persona-chip{padding:4px 7px;}
