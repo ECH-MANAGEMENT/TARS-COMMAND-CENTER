@@ -847,12 +847,32 @@ Deliver the end-of-day briefing.</div>
       <div class="day-header" onclick="toggleDay('day-tue')">
         <div>
           <div class="day-name">Tuesday <span class="day-today-badge" id="badge-tue" style="display:none">TODAY</span></div>
-          <div class="day-subtitle">Add Tuesday tasks here as needed</div>
+          <div class="day-subtitle">🔌 Tech Tuesday — System Health · Connector Check · Platform Review</div>
         </div>
         <div class="day-meta"><span class="day-count" id="count-tue">0/0</span><span class="chevron">▼</span></div>
       </div>
       <div class="day-body">
-        <div class="day-empty">No recurring tasks yet — add them as workflows are established.</div>
+
+        <!-- CONNECTOR HEALTH CHECK -->
+        <div style="background:#0a1a1a;border-left:3px solid #00bcd4;padding:8px 14px;margin:4px 0 2px;">
+          <div style="font-size:10px;font-weight:900;letter-spacing:2px;color:#4dd0e1;text-transform:uppercase;">🔌 CONNECTOR STATUS CHECK</div>
+          <div style="font-size:9px;color:#555;margin-top:2px;">Open TCC → STATUS tab → verify all connectors are green</div>
+        </div>
+        <div class="recur-item needed" onclick="toggleRecur(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Open TCC Status tab — verify all LIVE connectors still show green (Gmail, Calendar, Drive, Slack, Zapier, Filesystem)</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag" style="background:#0a1a1a;color:#4dd0e1;border:1px solid #006064;">TECH TUESDAY</span></div></div></div>
+        <div class="recur-item needed" onclick="toggleRecur(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Check DocuSign — still on trial or has it expired? If expired, flag for Jerry to decide on plan</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag" style="background:#0a1a1a;color:#4dd0e1;border:1px solid #006064;">TECH TUESDAY</span></div></div></div>
+        <div class="recur-item needed" onclick="toggleRecur(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Check Monday.com and Gusto connector status — if either shows PENDING, follow up on connecting and report to Jerry</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag" style="background:#0a1a1a;color:#4dd0e1;border:1px solid #006064;">TECH TUESDAY</span></div></div></div>
+        <div class="recur-item needed" onclick="toggleRecur(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Check scheduled tasks panel — confirm Weekly Executive Pulse (Mon 8:08AM), RentRedi Read (1st of month), and Finance App (Fri 1PM) all show LIVE</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag" style="background:#0a1a1a;color:#4dd0e1;border:1px solid #006064;">TECH TUESDAY</span></div></div></div>
+
+        <!-- PLATFORM & APP REVIEW -->
+        <div style="background:#0d0a1a;border-left:3px solid #7c4dff;padding:8px 14px;margin:10px 0 2px;">
+          <div style="font-size:10px;font-weight:900;letter-spacing:2px;color:#b388ff;text-transform:uppercase;">🧠 AI PLATFORM REVIEW</div>
+          <div style="font-size:9px;color:#555;margin-top:2px;">New tools · App updates · Anything that could improve the system</div>
+        </div>
+        <div class="recur-item needed" onclick="toggleRecur(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Check Cowork for any plugin or skill updates — open Cowork → check for available updates or new plugins in the marketplace</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag" style="background:#0a1a1a;color:#4dd0e1;border:1px solid #006064;">TECH TUESDAY</span></div></div></div>
+        <div class="recur-item needed" onclick="toggleRecur(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Review existing apps (RentRedi, Zapier, DocuSign, Monday.com, Gusto) — any new features, announcements, or pricing changes? Note anything relevant.</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag" style="background:#0a1a1a;color:#4dd0e1;border:1px solid #006064;">TECH TUESDAY</span></div></div></div>
+        <div class="recur-item needed" onclick="toggleRecur(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Identify any new technology, app, or AI tool that could improve ECH operations — property management, construction, finance, communication, automation</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag" style="background:#0a1a1a;color:#4dd0e1;border:1px solid #006064;">TECH TUESDAY</span></div></div></div>
+        <div class="recur-item needed" onclick="toggleRecur(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Write up a brief Tech Tuesday summary — what's connected, what changed, any recommendations — and message Jerry in Slack or email with findings</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag" style="background:#0a1a1a;color:#4dd0e1;border:1px solid #006064;">TECH TUESDAY</span></div></div></div>
+
       </div>
     </div>
 
