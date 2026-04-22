@@ -175,6 +175,9 @@ body{color:var(--text);font-family:'Segoe UI',system-ui,-apple-system,sans-serif
 .ashley-tag{background:#1a1a40;color:#9fa8da;} .manual-tag{background:#1a3d1a;color:#a5d6a7;}
 .auto-tag{background:#1a2a3d;color:#80cbc4;} .blocked-tag{background:#2a1a00;color:#ffcc02;}
 .done-tag{background:#1a3d1a;color:var(--green);}
+.monday-tag{background:#1a1a3d;color:#82b1ff;border:1px solid #2979ff;}
+.friday-tag{background:#2a1040;color:#e040fb;border:1px solid #aa00ff;}
+.recurring-tag{background:#0d1f0d;color:#69f0ae;border:1px solid #00c853;}
 
 /* ── MY TASKS ── */
 .mytasks-header{padding:20px 20px 0;max-width:900px;margin:0 auto;}
@@ -592,7 +595,8 @@ Deliver the end-of-day briefing.</div>
     <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">Google Drive synced locally as G: drive on Ashley's machine</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
     <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">ECH-FINANCIAL-OPERATIONS skill built and enabled in Cowork</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
     <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">Google Drive connected in Cowork — ECH_MANAGEMENT_AI_FINANCIAL_SYSTEM vault accessible</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
-    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">QuickBooks Online connected in Cowork — ECH Management Services LLC account</div><div class="item-tags"><span class="item-tag done-tag">DONE</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">QuickBooks dropped — too expensive. TARS Finance App built to replace it.</div><div class="item-tags"><span class="item-tag done-tag">REPLACED</span></div></div></div>
+    <div class="item done" onclick="toggleItem(this)"><div class="checkbox">✓</div><div class="item-content"><div class="item-text">TARS Finance App v1.0 built — P&L, Cash Flow, Balance Sheet, Consolidated, Weekly Summary — Friday 1PM auto-run live</div><div class="item-tags"><span class="item-tag done-tag">DONE</span><span class="item-tag auto-tag">AUTOMATED</span></div></div></div>
     <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Ashley: Set up DocuSign production account — echmanagement.services domain</div><div class="item-tags"><span class="item-tag p2">P2</span><span class="item-tag ashley-tag">ASHLEY</span></div></div></div>
     <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Fill out DocuSign MCP Beta access form — need production account email + account ID first</div><div class="item-tags"><span class="item-tag p2">P2</span></div></div></div>
     <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Connect DocuSign in Cowork Connectors once account + MCP beta access confirmed</div><div class="item-tags"><span class="item-tag p2">P2</span></div></div></div>
@@ -693,6 +697,61 @@ Deliver the end-of-day briefing.</div>
   </div>
 </div>
 
+
+<!-- SECTION 10 — ASHLEY WEEKLY RECURRING ROUTINE -->
+<div class="section" id="s10">
+  <div class="section-header" onclick="toggleSection('s10')">
+    <span class="section-title">Section 10 — Ashley Weekly Recurring Routine</span>
+    <div class="section-meta"><span class="section-tag" style="background:#1a1a40;color:#9fa8da;">ashley</span><span class="section-tag recurring-tag">RECURRING</span><span class="section-count" id="s10-count"></span><span class="chevron">▼</span></div>
+  </div>
+  <div class="section-progress-bar"><div class="section-progress-fill" id="s10-bar"></div></div>
+  <div class="section-body">
+
+    <!-- MONEY MONDAY HEADER -->
+    <div style="background:#0d0d2a;border-left:3px solid #2979ff;padding:10px 14px;margin:4px 0 2px;">
+      <div style="font-size:10px;font-weight:900;letter-spacing:2px;color:#82b1ff;text-transform:uppercase;">💰 MONEY MONDAY — Every Monday</div>
+      <div style="font-size:9px;color:#555;margin-top:2px;">Deposits · Bills · Reconciliation · INBOX prep</div>
+    </div>
+
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Deposit all collected rent and any incoming payments into Altra Bank accounts</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag monday-tag">MONEY MONDAY</span><span class="item-tag recurring-tag">WEEKLY</span></div></div></div>
+
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Pay all outstanding bills due this week — vendors, utilities, insurance, mortgage payments</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag monday-tag">MONEY MONDAY</span><span class="item-tag recurring-tag">WEEKLY</span></div></div></div>
+
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Log into all Altra Bank accounts — check all balances, verify no unexpected charges or holds</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag monday-tag">MONEY MONDAY</span><span class="item-tag recurring-tag">WEEKLY</span></div></div></div>
+
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Ensure all accounts are reconciled — every transaction accounted for, nothing unresolved</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag monday-tag">MONEY MONDAY</span><span class="item-tag recurring-tag">WEEKLY</span></div></div></div>
+
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Note anything that needs to be paid later this week — flag for Jerry if approval needed</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag monday-tag">MONEY MONDAY</span><span class="item-tag recurring-tag">WEEKLY</span></div></div></div>
+
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Download Excel/CSV transaction exports from ALL Altra Bank accounts</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag monday-tag">MONEY MONDAY</span><span class="item-tag recurring-tag">WEEKLY</span></div></div></div>
+
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Rename each export file using naming convention: ENTITY_CODE_YYYY_MM.xlsx (e.g. ECH_MGMT_2026_04.xlsx)</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag monday-tag">MONEY MONDAY</span><span class="item-tag recurring-tag">WEEKLY</span></div></div></div>
+
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Drop all renamed files into CLAUDE_WORKSPACE → INBOX — TARS picks them up automatically on Friday</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag monday-tag">MONEY MONDAY</span><span class="item-tag recurring-tag">WEEKLY</span></div></div></div>
+
+    <!-- FINANCIAL FRIDAY HEADER -->
+    <div style="background:#1a0d2a;border-left:3px solid #aa00ff;padding:10px 14px;margin:12px 0 2px;">
+      <div style="font-size:10px;font-weight:900;letter-spacing:2px;color:#e040fb;text-transform:uppercase;">📊 FINANCIAL FRIDAY — Every Friday</div>
+      <div style="font-size:9px;color:#555;margin-top:2px;">Reports · Accuracy check · Email · Distribute</div>
+    </div>
+
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Confirm TARS auto-ran at 1:00 PM — check 04_PORTFOLIO_LEVEL_REPORTING → 10_OUTPUTS → 05_FINANCIAL_REPORTS for this week's PDFs</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag friday-tag">FINANCIAL FRIDAY</span><span class="item-tag recurring-tag">WEEKLY</span></div></div></div>
+
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Open each entity report — spot-check figures for accuracy. Flag anything that looks off.</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag friday-tag">FINANCIAL FRIDAY</span><span class="item-tag recurring-tag">WEEKLY</span></div></div></div>
+
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Review any UNCATEGORIZED transactions flagged in reports — add keyword to chart_of_accounts.json so TARS auto-categorizes next time</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag friday-tag">FINANCIAL FRIDAY</span><span class="item-tag recurring-tag">WEEKLY</span></div></div></div>
+
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Update BALANCE_SHEET_INPUTS.xlsx — enter current mortgage balances, AR, AP, and any manual items for each entity</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag friday-tag">FINANCIAL FRIDAY</span><span class="item-tag recurring-tag">WEEKLY</span></div></div></div>
+
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Email reports to Jerry — attach all 5 PDFs (3 entity + Consolidated + Weekly Summary) — subject: "TARS Financial Reports — Week of [date]"</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag friday-tag">FINANCIAL FRIDAY</span><span class="item-tag recurring-tag">WEEKLY</span></div></div></div>
+
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Print Consolidated report and Weekly Summary — file physical copy in office binder</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag friday-tag">FINANCIAL FRIDAY</span><span class="item-tag recurring-tag">WEEKLY</span></div></div></div>
+
+    <div class="item needed" onclick="toggleItem(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Archive INBOX files — move processed exports to CLAUDE_WORKSPACE → INBOX → PROCESSED → YYYY_MM folder</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag friday-tag">FINANCIAL FRIDAY</span><span class="item-tag recurring-tag">WEEKLY</span></div></div></div>
+
+  </div>
+</div>
+
   </div><!-- end .main -->
   <div class="footer">ECH MANAGEMENT SERVICES LLC / EADS INDUSTRIES LLC — TEAM PLAN — V3 — CONFIDENTIAL</div>
 </div>
@@ -704,7 +763,7 @@ Deliver the end-of-day briefing.</div>
 <div class="tab-panel" id="panel-resources">
   <div class="resources-main">
 
-    <div class="res-section-title">CONNECTED TOOLS — LIVE AS OF APR 17, 2026</div>
+    <div class="res-section-title">CONNECTED TOOLS — LIVE AS OF APR 22, 2026</div>
     <div class="res-grid">
       <div class="res-card featured">
         <div class="res-card-icon">📧</div>
@@ -794,6 +853,13 @@ Deliver the end-of-day briefing.</div>
         <div class="res-card-status status-pending">CSV WORKFLOW</div>
         <a class="res-btn" href="https://dealcheck.io" target="_blank">OPEN DEALCHECK ↗</a>
       </div>
+      <div class="res-card featured">
+        <div class="res-card-icon">💰</div>
+        <div class="res-card-title">TARS Finance App</div>
+        <div class="res-card-desc">Custom-built QuickBooks replacement. Ashley drops Altra Bank exports in INBOX every Monday → TARS generates P&L, Cash Flow, Balance Sheet, Consolidated + Weekly Summary PDFs every Friday at 1PM. Print-ready. Email-ready.</div>
+        <div class="res-card-status status-live">LIVE — AUTO FRIDAY 1PM</div>
+        <button class="res-btn btn-green" onclick="switchTab('status')">VIEW SCHEDULED TASKS ↗</button>
+      </div>
     </div>
 
     <div class="res-section-title">VAULT DOCUMENTS</div>
@@ -882,25 +948,30 @@ Deliver the end-of-day briefing.</div>
     </div>
     <div class="status-grid-2">
       <div class="status-panel">
-        <div class="status-panel-header">CONNECTORS <span style="color:var(--green);font-size:8px;">8/12 LIVE</span></div>
+        <div class="status-panel-header">CONNECTORS <span style="color:var(--green);font-size:8px;">10/15 LIVE</span></div>
         <div class="connector-row"><div class="connector-name">Gmail</div><div class="connector-detail">jerry.eads / echmanagementserv</div><span class="conn-badge conn-active">CONNECTED</span></div>
         <div class="connector-row"><div class="connector-name">Google Calendar</div><div class="connector-detail">Central Time · Main + Holidays</div><span class="conn-badge conn-active">CONNECTED</span></div>
         <div class="connector-row"><div class="connector-name">Google Drive</div><div class="connector-detail">ECH vault accessible</div><span class="conn-badge conn-active">CONNECTED</span></div>
         <div class="connector-row"><div class="connector-name">DocuSign</div><div class="connector-detail">14-day trial — needs plan</div><span class="conn-badge conn-pending">TRIAL</span></div>
         <div class="connector-row"><div class="connector-name">Slack</div><div class="connector-detail">ECH Management Services WS</div><span class="conn-badge conn-active">CONNECTED</span></div>
         <div class="connector-row"><div class="connector-name">Zapier (183+ tools)</div><div class="connector-detail">Sheets, Docs, QB, SMS, Drive</div><span class="conn-badge conn-active">CONNECTED</span></div>
-        <div class="connector-row"><div class="connector-name">QuickBooks Online</div><div class="connector-detail">Auth fix pending</div><span class="conn-badge conn-pending">AUTH PENDING</span></div>
+        <div class="connector-row"><div class="connector-name">QuickBooks Online</div><div class="connector-detail">Dropped — too expensive. Replaced by TARS Finance App.</div><span class="conn-badge" style="background:#1a1a1a;color:#555;border:1px solid #333;">DROPPED</span></div>
+        <div class="connector-row"><div class="connector-name">TARS Finance App</div><div class="connector-detail">P&L · Cash Flow · Balance Sheet · Friday 1PM auto-run</div><span class="conn-badge conn-live">LIVE</span></div>
         <div class="connector-row"><div class="connector-name">Filesystem</div><div class="connector-detail">C:\ and G:\ drive</div><span class="conn-badge conn-active">CONNECTED</span></div>
         <div class="connector-row"><div class="connector-name">RentRedi</div><div class="connector-detail">CSV to INBOX workflow</div><span class="conn-badge conn-fallback">CSV WORKFLOW</span></div>
         <div class="connector-row"><div class="connector-name">Altra Bank</div><div class="connector-detail">Statement download to INBOX</div><span class="conn-badge conn-fallback">CSV WORKFLOW</span></div>
         <div class="connector-row"><div class="connector-name">Reventure App</div><div class="connector-detail">No Zapier integration</div><span class="conn-badge conn-pending">BROWSER ONLY</span></div>
+        <div class="connector-row"><div class="connector-name">GitHub Auto-Push</div><div class="connector-detail">Zapier → TCC auto-deploy on sign-off</div><span class="conn-badge conn-live">LIVE</span></div>
+        <div class="connector-row"><div class="connector-name">Monday.com</div><div class="connector-detail">Email change pending → ashley.eads@</div><span class="conn-badge conn-pending">PENDING</span></div>
+        <div class="connector-row"><div class="connector-name">Gusto</div><div class="connector-detail">Payroll / HR — not yet connected</div><span class="conn-badge" style="background:#1a1a1a;color:#555;border:1px solid #333;">NOT CONNECTED</span></div>
         <div class="connector-row"><div class="connector-name">DealCheck</div><div class="connector-detail">No Zapier integration</div><span class="conn-badge conn-pending">BROWSER ONLY</span></div>
       </div>
       <div class="status-panel">
         <div class="status-panel-header">SCHEDULED TASKS</div>
         <div class="task-row"><div style="font-size:16px;">📊</div><div class="task-info"><div class="task-name">Weekly Executive Pulse</div><div class="task-schedule">Every Monday · 8:08 AM · KPI → A-ESS → Drive → Slack</div></div><span class="conn-badge conn-live">LIVE</span></div>
-        <div class="task-row"><div style="font-size:16px;">🏠</div><div class="task-info"><div class="task-name">RentRedi Monthly Read</div><div class="task-schedule">1st of month · 8:00 AM · Ashley's machine</div></div><span class="conn-badge conn-fallback">TO BUILD</span></div>
+        <div class="task-row"><div style="font-size:16px;">🏠</div><div class="task-info"><div class="task-name">RentRedi Monthly Read</div><div class="task-schedule">1st of month · 8:00 AM · INBOX CSV → Drive → Slack</div></div><span class="conn-badge conn-live">LIVE</span></div>
         <div class="task-row"><div style="font-size:16px;">📍</div><div class="task-info"><div class="task-name">Reventure Market Scrape</div><div class="task-schedule">Recurring · Chrome fallback active</div></div><span class="conn-badge conn-active">ACTIVE</span></div>
+        <div class="task-row"><div style="font-size:16px;">💰</div><div class="task-info"><div class="task-name">TARS Finance App — Weekly Reports</div><div class="task-schedule">Every Friday · 1:00 PM · P&L + Cash Flow + Balance Sheet + Consolidated</div></div><span class="conn-badge conn-live">LIVE</span></div>
       </div>
       <div class="status-panel">
         <div class="status-panel-header">TEAM <span style="color:var(--text-dim);font-size:8px;">1/2 SEATS ACTIVE</span></div>
@@ -1015,7 +1086,9 @@ Cowork (desktop) is the primary TARS platform with full memory and tools.
 ── SYSTEM STATUS ──
 • Command Center: https://ech-management.github.io/TARS-COMMAND-CENTER/
 • Slack: echmanagementservices.slack.com
-• Cowork connectors: Gmail, Calendar, DocuSign, Slack, Zapier (183+ tools), QuickBooks, Drive, GitHub
+• Cowork connectors: Gmail, Calendar, DocuSign, Slack, Zapier (183+ tools), Drive, GitHub, GitHub Auto-Push (Zap LIVE), TARS Finance App (custom-built)
+• QuickBooks: DROPPED (too expensive) — replaced by TARS Finance App
+• Pending connectors: Monday.com (email change in progress), Gusto (not started)
 
 ── BOOT CONFIRMATION ──
 Respond: "TARS ONLINE — [date] — OPERATOR MODE — Ready, Jerry. What are we working on?"
@@ -1113,7 +1186,7 @@ function filter(mode) {
 }
 
 function updateAll() {
-  const sids = ['s1','s2','s3','s4','s5','s6','s7','s8','s9'];
+  const sids = ['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10'];
   let tDone = 0, tAll = 0, cD = 0, cN = 0, cI = 0, cU = 0;
   sids.forEach(sid => {
     const sec = document.getElementById(sid);
