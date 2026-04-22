@@ -300,6 +300,57 @@ body{color:var(--text);font-family:'Segoe UI',system-ui,-apple-system,sans-serif
 ::-webkit-scrollbar-track{background:var(--bg);}
 ::-webkit-scrollbar-thumb{background:#333;border-radius:3px;}
 ::-webkit-scrollbar-thumb:hover{background:#555;}
+
+/* ── REFRESH BUTTON ── */
+.refresh-btn{background:#0a1a0a;color:#69f0ae;border:1px solid #00c853;padding:5px 10px;border-radius:6px;font-size:9px;font-weight:900;letter-spacing:1px;cursor:pointer;text-transform:uppercase;transition:all .15s;white-space:nowrap;}
+.refresh-btn:hover{background:#00c853;color:#000;}
+.refresh-btn.refreshing{background:#00c853;color:#000;animation:pulse .6s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.6;}}
+
+/* ── RECURRING TAB ── */
+.recurring-main{padding:14px 20px calc(60px + var(--safe-bot));max-width:900px;margin:0 auto;}
+.day-block{margin-bottom:12px;border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.day-block.today{border-color:var(--green);}
+.day-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface2);cursor:pointer;user-select:none;}
+.day-block.today .day-header{background:#0d1f0d;}
+.day-name{font-size:11px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#ccc;}
+.day-block.today .day-name{color:var(--green);}
+.day-today-badge{font-size:8px;font-weight:700;background:var(--green);color:#000;padding:1px 6px;border-radius:2px;letter-spacing:1px;margin-left:8px;}
+.day-subtitle{font-size:9px;color:var(--text-dim);margin-top:2px;}
+.day-meta{display:flex;align-items:center;gap:8px;}
+.day-count{font-size:9px;color:var(--text-dim);}
+.day-body{background:var(--surface);}
+.day-block.collapsed .day-body{display:none;}
+.day-empty{padding:12px 14px;font-size:10px;color:var(--text-dim);font-style:italic;}
+.recur-item{display:flex;align-items:flex-start;gap:10px;padding:9px 14px 9px 12px;border-bottom:1px solid #1a1a1a;cursor:pointer;transition:background .1s;position:relative;}
+.recur-item:last-child{border-bottom:none;}
+.recur-item:hover{background:#1c1c1c;}
+.recur-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;}
+.recur-item.done::before{background:var(--green);}
+.recur-item.needed::before{background:var(--blue);}
+.recur-item.done .item-text{color:var(--text-dim);text-decoration:line-through;text-decoration-color:#444;}
+.recur-item .checkbox{width:16px;height:16px;border-radius:3px;border:2px solid var(--border2);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:10px;transition:all .15s;}
+.recur-item.done .checkbox{background:var(--green);border-color:var(--green);color:#000;font-weight:900;}
+.recur-item.needed .checkbox{border-color:#2979ff;background:var(--blue-dim);}
+.week-reset-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--surface2);border-radius:6px;margin-bottom:12px;}
+.week-reset-label{font-size:9px;color:var(--text-dim);font-weight:700;letter-spacing:1px;}
+.week-reset-btn{background:var(--surface);border:1px solid var(--border2);color:var(--text-dim);font-size:9px;font-weight:700;padding:4px 10px;border-radius:4px;cursor:pointer;letter-spacing:.5px;transition:all .15s;}
+.week-reset-btn:hover{border-color:var(--yellow);color:var(--yellow-text);}
+
+/* ── ASHLEY REFERENCE CARD ── */
+.ashley-ref-card{background:linear-gradient(135deg,#0d0d2a,#161616);border:1px solid #3d3d80;border-radius:8px;padding:20px;margin-bottom:20px;}
+.ashley-ref-title{font-size:11px;font-weight:900;letter-spacing:2px;color:#9fa8da;text-transform:uppercase;margin-bottom:4px;}
+.ashley-ref-sub{font-size:10px;color:var(--text-dim);margin-bottom:16px;}
+.ref-table{width:100%;border-collapse:collapse;margin-bottom:12px;}
+.ref-table th{font-size:8px;font-weight:800;letter-spacing:1.5px;color:var(--text-dim);text-transform:uppercase;padding:6px 10px;background:var(--surface2);border:1px solid var(--border);text-align:left;}
+.ref-table td{font-size:10px;color:var(--text);padding:7px 10px;border:1px solid var(--border);line-height:1.4;}
+.ref-table td code{font-family:'Courier New',monospace;font-size:10px;color:#69f0ae;background:#0d1a0d;padding:1px 5px;border-radius:2px;}
+.ref-table tr:nth-child(even) td{background:#111;}
+.ref-highlight{background:#0d1f2a;border:1px solid #2979ff;border-radius:4px;padding:10px 14px;margin-bottom:10px;font-size:10px;color:var(--blue-text);line-height:1.6;}
+.ref-highlight code{font-family:'Courier New',monospace;color:#82b1ff;background:#0a1020;padding:1px 5px;border-radius:2px;}
+.ref-step{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;}
+.ref-step-num{background:#1a1a40;color:#9fa8da;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;flex-shrink:0;margin-top:1px;}
+.ref-step-text{font-size:10px;color:var(--text);line-height:1.5;}
 </style>
 </head>
 <body>
@@ -354,6 +405,7 @@ Deliver the end-of-day briefing.</div>
       <span class="tars-badge">COMMAND CENTER</span>
     </div>
     <div style="display:flex;align-items:center;gap:8px;">
+      <button class="refresh-btn" onclick="forceRefresh()" id="refresh-btn">🔄 REFRESH</button>
       <button class="signoff-btn" style="background:var(--blue-dim);color:var(--blue-text);border-color:var(--blue);" onclick="copyBootCommand()" id="boot-btn">⚡ BOOT COMMAND</button>
       <button class="signoff-btn" onclick="showSignoffModal()">⏻ UPDATE &amp; SIGN OFF</button>
       <div class="persona-chip" onclick="showPersonaModal()">
@@ -373,6 +425,7 @@ Deliver the end-of-day briefing.</div>
     <button class="tab-btn active" onclick="switchTab('my-tasks')" id="tab-my-tasks">👤 MY TASKS</button>
     <button class="tab-btn" onclick="switchTab('team')" id="tab-team">👥 TEAM <span class="tab-count" id="team-count">—</span></button>
     <button class="tab-btn" onclick="switchTab('punch-list')" id="tab-punch-list">📋 PUNCH LIST <span class="tab-count" id="tab-punch-count">—</span></button>
+    <button class="tab-btn" onclick="switchTab('recurring')" id="tab-recurring">🔁 RECURRING</button>
     <button class="tab-btn" onclick="switchTab('resources')" id="tab-resources">📁 RESOURCES</button>
     <button class="tab-btn" onclick="switchTab('status')" id="tab-status">🔌 STATUS</button>
   </div>
@@ -758,10 +811,176 @@ Deliver the end-of-day briefing.</div>
 
 
 <!-- ══════════════════════════════════════
+     TAB: RECURRING
+══════════════════════════════════════ -->
+<div class="tab-panel" id="panel-recurring">
+  <div class="recurring-main">
+
+    <div class="week-reset-bar">
+      <span class="week-reset-label">📅 WEEKLY RECURRING TASKS — <span id="week-label">WEEK OF —</span></span>
+      <button class="week-reset-btn" onclick="resetWeek()">↺ RESET FOR NEW WEEK</button>
+    </div>
+
+    <!-- MONDAY -->
+    <div class="day-block" id="day-mon">
+      <div class="day-header" onclick="toggleDay('day-mon')">
+        <div>
+          <div class="day-name">Monday <span class="day-today-badge" id="badge-mon" style="display:none">TODAY</span></div>
+          <div class="day-subtitle">💰 Money Monday — Deposits · Bills · Bank Reconciliation · INBOX Prep</div>
+        </div>
+        <div class="day-meta"><span class="day-count" id="count-mon">0/0</span><span class="chevron">▼</span></div>
+      </div>
+      <div class="day-body">
+        <div class="recur-item needed" onclick="toggleRecur(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Deposit all collected rent and incoming payments into Altra Bank accounts</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag monday-tag">MONEY MONDAY</span></div></div></div>
+        <div class="recur-item needed" onclick="toggleRecur(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Pay all outstanding bills due this week — vendors, utilities, insurance, mortgage payments</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag monday-tag">MONEY MONDAY</span></div></div></div>
+        <div class="recur-item needed" onclick="toggleRecur(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Log into all Altra Bank accounts — check all balances, verify no unexpected charges or holds</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag monday-tag">MONEY MONDAY</span></div></div></div>
+        <div class="recur-item needed" onclick="toggleRecur(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Reconcile all accounts — every transaction accounted for, nothing unresolved</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag monday-tag">MONEY MONDAY</span></div></div></div>
+        <div class="recur-item needed" onclick="toggleRecur(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Note anything due later this week — flag for Jerry if approval needed</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag monday-tag">MONEY MONDAY</span></div></div></div>
+        <div class="recur-item needed" onclick="toggleRecur(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Download Excel/CSV transaction exports from ALL Altra Bank accounts</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag monday-tag">MONEY MONDAY</span></div></div></div>
+        <div class="recur-item needed" onclick="toggleRecur(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Rename each file using naming convention: <strong>ENTITY_CODE_YYYY_MM.xlsx</strong> — see Ashley File Guide in Resources</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag monday-tag">MONEY MONDAY</span></div></div></div>
+        <div class="recur-item needed" onclick="toggleRecur(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Drop all renamed files into CLAUDE_WORKSPACE → INBOX — TARS picks them up automatically on Friday at 1PM</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag monday-tag">MONEY MONDAY</span></div></div></div>
+      </div>
+    </div>
+
+    <!-- TUESDAY -->
+    <div class="day-block" id="day-tue">
+      <div class="day-header" onclick="toggleDay('day-tue')">
+        <div>
+          <div class="day-name">Tuesday <span class="day-today-badge" id="badge-tue" style="display:none">TODAY</span></div>
+          <div class="day-subtitle">Add Tuesday tasks here as needed</div>
+        </div>
+        <div class="day-meta"><span class="day-count" id="count-tue">0/0</span><span class="chevron">▼</span></div>
+      </div>
+      <div class="day-body">
+        <div class="day-empty">No recurring tasks yet — add them as workflows are established.</div>
+      </div>
+    </div>
+
+    <!-- WEDNESDAY -->
+    <div class="day-block" id="day-wed">
+      <div class="day-header" onclick="toggleDay('day-wed')">
+        <div>
+          <div class="day-name">Wednesday <span class="day-today-badge" id="badge-wed" style="display:none">TODAY</span></div>
+          <div class="day-subtitle">Add Wednesday tasks here as needed</div>
+        </div>
+        <div class="day-meta"><span class="day-count" id="count-wed">0/0</span><span class="chevron">▼</span></div>
+      </div>
+      <div class="day-body">
+        <div class="day-empty">No recurring tasks yet — add them as workflows are established.</div>
+      </div>
+    </div>
+
+    <!-- THURSDAY -->
+    <div class="day-block" id="day-thu">
+      <div class="day-header" onclick="toggleDay('day-thu')">
+        <div>
+          <div class="day-name">Thursday <span class="day-today-badge" id="badge-thu" style="display:none">TODAY</span></div>
+          <div class="day-subtitle">Add Thursday tasks here as needed</div>
+        </div>
+        <div class="day-meta"><span class="day-count" id="count-thu">0/0</span><span class="chevron">▼</span></div>
+      </div>
+      <div class="day-body">
+        <div class="day-empty">No recurring tasks yet — add them as workflows are established.</div>
+      </div>
+    </div>
+
+    <!-- FRIDAY -->
+    <div class="day-block" id="day-fri">
+      <div class="day-header" onclick="toggleDay('day-fri')">
+        <div>
+          <div class="day-name">Friday <span class="day-today-badge" id="badge-fri" style="display:none">TODAY</span></div>
+          <div class="day-subtitle">📊 Financial Friday — Reports · Accuracy Check · Email · Distribute</div>
+        </div>
+        <div class="day-meta"><span class="day-count" id="count-fri">0/0</span><span class="chevron">▼</span></div>
+      </div>
+      <div class="day-body">
+        <div class="recur-item needed" onclick="toggleRecur(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Confirm TARS auto-ran at 1:00 PM — check 04_PORTFOLIO_LEVEL_REPORTING → 10_OUTPUTS → 05_FINANCIAL_REPORTS for this week's PDFs</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag friday-tag">FINANCIAL FRIDAY</span></div></div></div>
+        <div class="recur-item needed" onclick="toggleRecur(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Open each entity report — spot-check figures for accuracy. Flag anything that looks off to Jerry.</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag friday-tag">FINANCIAL FRIDAY</span></div></div></div>
+        <div class="recur-item needed" onclick="toggleRecur(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Review UNCATEGORIZED transactions flagged in reports — add keyword to chart_of_accounts.json so TARS auto-categorizes next time</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag friday-tag">FINANCIAL FRIDAY</span></div></div></div>
+        <div class="recur-item needed" onclick="toggleRecur(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Update BALANCE_SHEET_INPUTS.xlsx — enter current mortgage balances, AR, AP, and any manual items for each entity</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag friday-tag">FINANCIAL FRIDAY</span></div></div></div>
+        <div class="recur-item needed" onclick="toggleRecur(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Email reports to Jerry — attach all 5 PDFs (3 entity + Consolidated + Weekly Summary) — subject: "TARS Financial Reports — Week of [date]"</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag friday-tag">FINANCIAL FRIDAY</span></div></div></div>
+        <div class="recur-item needed" onclick="toggleRecur(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Print Consolidated report and Weekly Summary — file physical copy in office binder</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag friday-tag">FINANCIAL FRIDAY</span></div></div></div>
+        <div class="recur-item needed" onclick="toggleRecur(this)"><div class="checkbox"></div><div class="item-content"><div class="item-text">Archive INBOX files — move processed exports to CLAUDE_WORKSPACE → INBOX → PROCESSED → YYYY_MM folder</div><div class="item-tags"><span class="item-tag ashley-tag">ASHLEY</span><span class="item-tag friday-tag">FINANCIAL FRIDAY</span></div></div></div>
+      </div>
+    </div>
+
+    <!-- WEEKEND (collapsed by default) -->
+    <div class="day-block collapsed" id="day-wknd">
+      <div class="day-header" onclick="toggleDay('day-wknd')">
+        <div>
+          <div class="day-name">Saturday / Sunday</div>
+          <div class="day-subtitle">Add weekend tasks here as needed</div>
+        </div>
+        <div class="day-meta"><span class="day-count" id="count-wknd">0/0</span><span class="chevron">▼</span></div>
+      </div>
+      <div class="day-body">
+        <div class="day-empty">No recurring tasks yet.</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="footer">ECH MANAGEMENT SERVICES LLC — TEAM PLAN — V3 — CONFIDENTIAL</div>
+</div>
+
+
+<!-- ══════════════════════════════════════
      TAB: RESOURCES
 ══════════════════════════════════════ -->
 <div class="tab-panel" id="panel-resources">
   <div class="resources-main">
+
+    <!-- ASHLEY FILE GUIDE -->
+    <div class="ashley-ref-card">
+      <div class="ashley-ref-title">📂 Ashley — File Naming &amp; INBOX Guide</div>
+      <div class="ashley-ref-sub">Everything you need to drop files in correctly so TARS processes them automatically every Friday at 1PM.</div>
+
+      <div style="font-size:9px;font-weight:800;letter-spacing:1.5px;color:#9fa8da;text-transform:uppercase;margin-bottom:8px;">STEP-BY-STEP — EVERY MONDAY</div>
+      <div class="ref-step"><div class="ref-step-num">1</div><div class="ref-step-text">Log into Altra Bank online banking. Go to each account and <strong>download the transaction export as Excel (.xlsx) or CSV.</strong></div></div>
+      <div class="ref-step"><div class="ref-step-num">2</div><div class="ref-step-text">Rename the file using the format below. Use the Entity Code table to find the right code for each account.</div></div>
+      <div class="ref-step"><div class="ref-step-num">3</div><div class="ref-step-text">Drop all renamed files into: <code>G:\My Drive\CLAUDE_WORKSPACE\INBOX\</code></div></div>
+      <div class="ref-step"><div class="ref-step-num">4</div><div class="ref-step-text">Done. TARS picks them up automatically on Friday at 1:00 PM and generates all reports.</div></div>
+
+      <div style="margin:14px 0 8px;font-size:9px;font-weight:800;letter-spacing:1.5px;color:#9fa8da;text-transform:uppercase;">FILE NAMING FORMAT</div>
+      <div class="ref-highlight">
+        Format: <code>ENTITY_CODE_YYYY_MM.xlsx</code><br>
+        Example: <code>ECH_MGMT_2026_04.xlsx</code> &nbsp;·&nbsp; <code>EADS_IND_2026_04.xlsx</code> &nbsp;·&nbsp; <code>JP_EADS_2026_04.xlsx</code>
+      </div>
+
+      <div style="margin:14px 0 8px;font-size:9px;font-weight:800;letter-spacing:1.5px;color:#9fa8da;text-transform:uppercase;">ENTITY CODES</div>
+      <table class="ref-table">
+        <tr><th>Entity Code</th><th>Company Name</th></tr>
+        <tr><td><code>ECH_MGMT</code></td><td>ECH Management Services LLC</td></tr>
+        <tr><td><code>EADS_IND</code></td><td>EADS Industries LLC</td></tr>
+        <tr><td><code>ECH_DEV</code></td><td>ECH Developments and Holdings LLC</td></tr>
+        <tr><td><code>JP_EADS</code></td><td>JP Eads Company LLC</td></tr>
+        <tr><td><code>ES_CONC</code></td><td>E&amp;S Concrete Construction Inc</td></tr>
+        <tr><td><code>EADS_TOOLS</code></td><td>EADS Tools and Equipment LLC</td></tr>
+      </table>
+
+      <div style="margin:14px 0 8px;font-size:9px;font-weight:800;letter-spacing:1.5px;color:#9fa8da;text-transform:uppercase;">REQUIRED COLUMNS IN THE EXCEL FILE</div>
+      <table class="ref-table">
+        <tr><th>Column Name</th><th>Format</th><th>Example</th></tr>
+        <tr><td>Date</td><td>MM/DD/YYYY</td><td>04/15/2026</td></tr>
+        <tr><td>Description</td><td>Text (as it appears in the bank)</td><td>ONCOR ELECTRIC PMT</td></tr>
+        <tr><td>Debit</td><td>Number (money going out)</td><td>245.00</td></tr>
+        <tr><td>Credit</td><td>Number (money coming in)</td><td>1500.00</td></tr>
+        <tr><td>Balance</td><td>Number (running balance)</td><td>12450.00</td></tr>
+      </table>
+
+      <div style="margin:14px 0 8px;font-size:9px;font-weight:800;letter-spacing:1.5px;color:#9fa8da;text-transform:uppercase;">MONTHLY — BALANCE SHEET INPUTS (fill in every Friday)</div>
+      <div class="ref-highlight">
+        File: <code>CLAUDE_WORKSPACE\scripts\TARS_FINANCE\BALANCE_SHEET_INPUTS.xlsx</code><br>
+        Open this file → fill in the <strong>blue cells</strong> for each entity tab:<br>
+        Mortgage balances · Accounts Receivable · Accounts Payable · Equipment values · Other assets/liabilities
+      </div>
+
+      <div style="margin:14px 0 8px;font-size:9px;font-weight:800;letter-spacing:1.5px;color:#9fa8da;text-transform:uppercase;">NAMING RULES — ALL FILES IN THE SYSTEM</div>
+      <div style="font-size:10px;color:var(--text-dim);line-height:1.7;">
+        ✅ ALL CAPS &nbsp;·&nbsp; NO SPACES &nbsp;·&nbsp; UNDERSCORES ONLY<br>
+        ✅ Example: <code>ECH_MGMT_2026_04.xlsx</code> &nbsp; NOT: <code>ECH Mgmt April.xlsx</code><br>
+        ✅ TARS will reject files that don't follow this format
+      </div>
+    </div>
 
     <div class="res-section-title">CONNECTED TOOLS — LIVE AS OF APR 22, 2026</div>
     <div class="res-grid">
@@ -1001,6 +1220,28 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js').catch(() => {});
   });
+}
+
+// ══════════════════════════════════════
+//  FORCE REFRESH
+// ══════════════════════════════════════
+function forceRefresh() {
+  const btn = document.getElementById('refresh-btn');
+  btn.textContent = '🔄 REFRESHING...';
+  btn.classList.add('refreshing');
+  const doReload = () => window.location.href = window.location.href.split('?')[0] + '?v=' + Date.now();
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(regs => {
+      const unregisters = regs.map(r => r.unregister());
+      return Promise.all(unregisters);
+    }).then(() => {
+      if ('caches' in window) {
+        return caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k))));
+      }
+    }).then(() => { setTimeout(doReload, 200); }).catch(() => doReload());
+  } else {
+    doReload();
+  }
 }
 
 // ══════════════════════════════════════
@@ -1321,6 +1562,78 @@ function renderTeam() {
 }
 
 // ══════════════════════════════════════
+//  RECURRING TAB
+// ══════════════════════════════════════
+function toggleDay(id) {
+  document.getElementById(id).classList.toggle('collapsed');
+  updateDayCounts();
+}
+
+function toggleRecur(el) {
+  if (el.classList.contains('done')) {
+    el.classList.replace('done','needed');
+    el.querySelector('.checkbox').textContent = '';
+  } else {
+    el.classList.replace('needed','done');
+    el.querySelector('.checkbox').textContent = '✓';
+  }
+  updateDayCounts();
+}
+
+function updateDayCounts() {
+  const days = ['mon','tue','wed','thu','fri','wknd'];
+  const dayIds = {'mon':'day-mon','tue':'day-tue','wed':'day-wed','thu':'day-thu','fri':'day-fri','wknd':'day-wknd'};
+  days.forEach(d => {
+    const block = document.getElementById(dayIds[d]);
+    if (!block) return;
+    const items = block.querySelectorAll('.recur-item');
+    const done  = block.querySelectorAll('.recur-item.done').length;
+    const el = document.getElementById('count-' + d);
+    if (el) el.textContent = items.length > 0 ? done + '/' + items.length : '—';
+  });
+}
+
+function resetWeek() {
+  document.querySelectorAll('.recur-item').forEach(el => {
+    el.classList.remove('done');
+    el.classList.add('needed');
+    el.querySelector('.checkbox').textContent = '';
+  });
+  updateDayCounts();
+}
+
+function initRecurring() {
+  // Highlight today's day block
+  const now = new Date();
+  const dayOfWeek = now.getDay(); // 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
+  const dayMap = {1:'mon',2:'tue',3:'wed',4:'thu',5:'fri',0:'wknd',6:'wknd'};
+  const todayKey = dayMap[dayOfWeek];
+  const todayBlock = document.getElementById('day-' + todayKey);
+  if (todayBlock) {
+    todayBlock.classList.add('today');
+    const badge = document.getElementById('badge-' + todayKey);
+    if (badge) badge.style.display = 'inline-block';
+    // Expand today, collapse others
+    ['mon','tue','wed','thu','fri','wknd'].forEach(d => {
+      const b = document.getElementById('day-' + d);
+      if (b) {
+        if (d === todayKey) b.classList.remove('collapsed');
+        else if (d !== 'mon' && d !== 'fri') b.classList.add('collapsed');
+      }
+    });
+  }
+
+  // Set week label
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - (now.getDay() === 0 ? 6 : now.getDay() - 1));
+  const opts = {month:'short', day:'numeric', year:'numeric'};
+  const lbl = document.getElementById('week-label');
+  if (lbl) lbl.textContent = 'WEEK OF ' + monday.toLocaleDateString('en-US', opts).toUpperCase();
+
+  updateDayCounts();
+}
+
+// ══════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
@@ -1328,11 +1641,13 @@ document.addEventListener('DOMContentLoaded', () => {
   applyPersona();
   renderMyTasks();
   renderTeam();
+  initRecurring();
 });
 updateAll();
 applyPersona();
 renderMyTasks();
 renderTeam();
+initRecurring();
 </script>
 </body>
 </html>
