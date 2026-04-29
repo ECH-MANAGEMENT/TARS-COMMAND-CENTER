@@ -1,0 +1,65 @@
+name: TARS Auto Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason (e.g. TARS session update)'
+        required: false
+        default: 'TARS session update'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Update deploy marker
+        run: |
+          echo "Last deployed: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" > .last-deployed
+          echo "Triggered by: ${{ github.event_name }}" >> .last-deployed
+          echo "Reason: ${{ github.event.inputs.reason || 'push to main' }}" >> .last-deployed
+
+      - name: Commit marker
+        run: |
+          git config user.name "TARS-BOT"
+          git config user.email "tars@echmanagement.services"
+          git add .last-deployed
+          git diff --staged --quiet || git commit -m "TARS auto-deploy $(date -u '+%Y-%m-%d %H:%M')"
+          git push || true
+
+  pages:
+    needs: deploy
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
