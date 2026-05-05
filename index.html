@@ -1844,11 +1844,13 @@ initRecurring();
 (function fetchLastUpdated() {
   const el = document.getElementById('last-updated-ts');
   if (!el) return;
-  fetch('https://api.github.com/repos/ech-management-llc/TARS-COMMAND-CENTER/commits?per_page=1')
-    .then(r => r.json())
-    .then(data => {
-      if (data && data[0] && data[0].commit) {
-        const d = new Date(data[0].commit.committer.date);
+  // Private repo — read .last-deployed from same origin (updated by Actions workflow)
+  fetch('.last-deployed?cb=' + Date.now())
+    .then(r => r.ok ? r.text() : Promise.reject())
+    .then(txt => {
+      const m = txt.match(/Last deployed:\s*(\d{4}-\d{2}-\d{2})\s+(\d{2}:\d{2}):\d{2}\s*UTC/);
+      if (m) {
+        const d = new Date(m[1] + 'T' + m[2] + ':00Z');
         const opts = { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'America/Chicago' };
         el.textContent = d.toLocaleString('en-US', opts) + ' CT';
       } else {
