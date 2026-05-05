@@ -1119,27 +1119,26 @@ Deliver the end-of-day briefing.</div>
     </div>
 
 
-    <!-- ACCOUNT MAP — added 2026-05-04 -->
+    <!-- ACCOUNT MAP — sanitized for public page · added 2026-05-04, sanitized 2026-05-04 -->
     <div class="ashley-ref-card">
-      <div class="ashley-ref-title">🔐 Account Map — Which Account Goes Where</div>
-      <div class="ashley-ref-sub">Reference for Jerry &amp; Ashley. If a connector breaks, check this map FIRST. Added 2026-05-04 after a Drive/Zapier account mismatch cost ~1 hour to diagnose.</div>
+      <div class="ashley-ref-title">🔐 Account Map — Service → Provider</div>
+      <div class="ashley-ref-sub">Reference for Jerry &amp; Ashley. If a connector breaks, check this map FIRST. Specific account credentials live in <code>MEGA_BRAIN/SYSTEM-KEYS.md</code> (private vault, not on this page).</div>
 
-      <div style="margin:14px 0 8px;font-size:9px;font-weight:800;letter-spacing:1.5px;color:#9fa8da;text-transform:uppercase;">SERVICE → ACCOUNT</div>
+      <div style="margin:14px 0 8px;font-size:9px;font-weight:800;letter-spacing:1.5px;color:#9fa8da;text-transform:uppercase;">SERVICE → PROVIDER</div>
       <table class="ref-table">
-        <tr><th>Service</th><th>Account</th><th>Notes</th></tr>
-        <tr><td>Google Drive (Drive Stream + Zapier)</td><td><code>echmanagementserv@gmail.com</code></td><td><strong>OWNS all MEGA_BRAIN + ECH_MANAGEMENT_AI_FINANCIAL_SYSTEM data.</strong> Drive Stream tray sign-in MUST match Zapier Google Drive connection.</td></tr>
-        <tr><td>Gmail (Workspace mailboxes)</td><td><code>jerry.eads@echmanagement.services</code><br><code>ashley.eads@echmanagement.services</code><br><code>manager@echmanagement.services</code></td><td>New domain — live May 3, 2026</td></tr>
-        <tr><td>Google Calendar (Zapier)</td><td><code>echmanagementserv@gmail.com</code></td><td>13 tools</td></tr>
-        <tr><td>Slack (Zapier MCP)</td><td><code>@echmanagementserv</code></td><td>ECH Management Services workspace · 34 tools</td></tr>
-        <tr><td>Docusign (Zapier MCP)</td><td><code>ECHMANAGEMENTSERV@GMAIL.COM</code></td><td>Account ID 4cf2ae7e-d803-4f81-ac21-29b112c3e1cd · 42 tools · 14-day trial</td></tr>
-        <tr><td>GitHub (TCC repo + auto-deploy)</td><td><code>ECH-MANAGEMENT</code> org</td><td>PAT TARS-MASTER stored in MEGA_BRAIN/SYSTEM-KEYS.md</td></tr>
-        <tr><td>Zapier MCP Server</td><td>Owned by jerry.eads@echmanagement.services Zapier acct</td><td>122 tools live · all connectors above route through this server</td></tr>
-        <tr><td>Claude Team account</td><td><code>jerry.eads@echmanagement.services</code></td><td>Boot prompt loaded · TARS BOOT V1</td></tr>
-        <tr><td>OneDrive (Microsoft)</td><td><code>ashley.eads@jp-eads.com</code></td><td>Ashley's personal — NOT used by TARS, do not confuse with Google Drive</td></tr>
+        <tr><th>Service</th><th>Provider / Account</th><th>Notes</th></tr>
+        <tr><td>Google Drive (Drive Stream + Zapier)</td><td>Primary Drive (see vault)</td><td><strong>OWNS all MEGA_BRAIN + ECH_MANAGEMENT_AI_FINANCIAL_SYSTEM data.</strong> Drive Stream tray sign-in MUST match Zapier Google Drive connection.</td></tr>
+        <tr><td>Gmail (Workspace mailboxes)</td><td>@echmanagement.services</td><td>jerry.eads / ashley.eads / manager · live May 3 2026</td></tr>
+        <tr><td>Google Calendar (Zapier)</td><td>Primary Drive acct</td><td>13 tools</td></tr>
+        <tr><td>Slack (Zapier MCP)</td><td>ECH Management Services workspace</td><td>34 tools</td></tr>
+        <tr><td>Docusign (Zapier MCP)</td><td>Primary Drive acct</td><td>42 tools · 14-day trial</td></tr>
+        <tr><td>GitHub (TCC repo + auto-deploy)</td><td>ech-management-llc org under EADS ENTERPRISES</td><td>PAT stored in SYSTEM-KEYS.md</td></tr>
+        <tr><td>Zapier MCP Server</td><td>jerry.eads@echmanagement.services Zapier acct</td><td>122 tools · all connectors route through this server</td></tr>
+        <tr><td>Claude Team account</td><td>jerry.eads@echmanagement.services</td><td>Boot prompt loaded · TARS BOOT V1</td></tr>
       </table>
 
       <div style="margin-top:10px;padding:8px 10px;background:var(--green-dim);border:1px solid var(--green);border-radius:6px;font-size:9px;color:var(--green);font-weight:700;letter-spacing:1px;">
-        ⚡ HARDWIRED RULE 4: Drive Stream sign-in MUST match the Zapier Google Drive connection. If a Drive tool returns empty results, check the Drive Stream tray icon (echmanagementserv@gmail.com) vs. mcp.zapier.com → Google Drive connection (must also be echmanagementserv@gmail.com).
+        ⚡ HARDWIRED RULE 4: Drive Stream sign-in MUST match the Zapier Google Drive connection. If a Drive tool returns empty results, check the Drive Stream tray icon vs. mcp.zapier.com → Google Drive connection. Both must be the SAME account (the one stored in SYSTEM-KEYS.md). Specific account name is intentionally not listed here — see private vault.
       </div>
     </div>
 
@@ -1354,7 +1353,7 @@ Deliver the end-of-day briefing.</div>
     <div class="status-grid-2">
       <div class="status-panel">
         <div class="status-panel-header">CONNECTORS <span style="color:var(--green);font-size:8px;">12/16 LIVE</span></div>
-        <div class="connector-row"><div class="connector-name">Gmail</div><div class="connector-detail">jerry.eads / echmanagementserv</div><span class="conn-badge conn-active">CONNECTED</span></div>
+        <div class="connector-row"><div class="connector-name">Gmail</div><div class="connector-detail">Workspace + backup acct</div><span class="conn-badge conn-active">CONNECTED</span></div>
         <div class="connector-row"><div class="connector-name">Google Calendar</div><div class="connector-detail">Central Time · Main + Holidays</div><span class="conn-badge conn-active">CONNECTED</span></div>
         <div class="connector-row"><div class="connector-name">Google Drive</div><div class="connector-detail">ECH_MANAGEMENT_AI_FINANCIAL_SYSTEM — scripts, reports, contracts</div><span class="conn-badge conn-active">CONNECTED</span></div>
         <div class="connector-row"><div class="connector-name">Obsidian / MEGABRAIN</div><div class="connector-detail">mega-brain vault · Git auto-sync · Doctrine + Memory</div><span class="conn-badge conn-live">LIVE</span></div>
