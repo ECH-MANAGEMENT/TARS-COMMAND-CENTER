@@ -1,7 +1,7 @@
 // TARS Command Center — Service Worker
 // Version: 1.0 — ECH Management Services LLC
 
-const CACHE_NAME = 'tars-cc-v3-public';
+const CACHE_NAME = 'tars-cc-v4-custom-domain';
 const ASSETS = [
   '/index.html',
   '/manifest.json',
